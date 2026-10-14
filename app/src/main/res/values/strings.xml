@@ -66,9 +66,9 @@ Stopped at: %2$s</string>
     <string name="home_hide">Hide a secret</string>
     <string name="home_reveal">Reveal a secret</string>
     <string name="home_lab">Integrity Lab</string>
-    <string name="home_scan">Scanner · Coming soon</string>
-    <string name="home_history">History · Coming soon</string>
-    <string name="home_settings">Settings · Coming soon</string>
+    <string name="home_scan">Scanner</string>
+    <string name="home_history">Vault</string>
+    <string name="home_settings">Settings</string>
     <string name="home_coming_soon">Coming soon. This tile will be available in a later step.</string>
     <string name="orb_description">Motion orb, %1$d of %2$d dial segments locked</string>
     <string name="hide_title">Forge your vault.</string>
@@ -81,7 +81,7 @@ Stopped at: %2$s</string>
     <string name="hide_stepper">Cover › Secret › Gesture › Forge › Result</string>
     <string name="hide_cover_intro">Choose the image that will carry your encrypted secret. A generated cover works entirely offline.</string>
     <string name="hide_cover_description">Selected cover image preview</string>
-    <string name="hide_cover_empty">Choose an image to see its available capacity.</string>
+    <string name="hide_cover_empty">Start with a photo from your device, or Generate a cover for an offline vault.</string>
     <string name="hide_cover_loading">Preparing the cover…</string>
     <string name="hide_cover_details">%1$d × %2$d pixels · %3$d bytes of encoded capacity</string>
     <string name="hide_cover_retry">Choose another image or generate a cover to continue.</string>
@@ -98,7 +98,7 @@ Stopped at: %2$s</string>
     <string name="hide_file">File</string>
     <string name="hide_text_hint">Enter your secret text</string>
     <string name="hide_choose_file">Choose a file</string>
-    <string name="hide_file_empty">No file selected.</string>
+    <string name="hide_file_empty">Choose a file to encrypt, or switch to Text to type a secret.</string>
     <string name="hide_file_selected">File selected. Its contents and filename will be encrypted.</string>
     <string name="hide_compress">Compress the secret</string>
     <string name="hide_ghost">Ghost mode</string>
@@ -177,7 +177,7 @@ Stopped at: %2$s</string>
     <string name="reveal_extract">Extracting encrypted data</string>
     <string name="reveal_decrypt">Authenticating and decrypting</string>
     <string name="reveal_unpack">Opening the secret</string>
-    <string name="reveal_success">Vault unlocked.</string>
+    <string name="reveal_success">Vault unlocked. Read your secret below or choose Export options.</string>
     <string name="reveal_denied">Could not unlock. The credentials may not match, or the image may have been changed or damaged. Record the original gesture again, re-enter the passphrase if requested, or choose the untouched PNG.</string>
     <string name="reveal_attempts">Unsuccessful unlock attempts: %1$d</string>
     <string name="reveal_door_locked">Circular vault door, locked</string>
@@ -192,4 +192,62 @@ Stopped at: %2$s</string>
     <string name="reveal_saved">Decrypted file saved. It is no longer protected by the vault.</string>
     <string name="reveal_export_error">Could not export the file. Unlock again if needed, free some storage, and choose Save with another destination.</string>
     <string name="reveal_open_error">No suitable app could open this file. Use Save, then open it with an app that supports its file type.</string>
+    <string name="calculator_title">Calculator</string>
+    <string name="calc_zero">0</string>
+    <string name="calc_error">Cannot calculate this result. Tap C to clear and try again.</string>
+    <string name="settings_code">Calculator code (6–12 digits; blank keeps current code)</string>
+    <string name="settings_code_error">Enter a 6–12 digit code before enabling disguise mode.</string>
+    <string name="settings_nerd">Nerd Mode: show live motion details</string>
+    <string name="settings_disguise_note">Choose a memorable 6–12 digit code, then Save settings. On the calculator, enter those digits and press = to open Home. Blank keeps an existing code; a new code replaces it. There is no code recovery. This disguises the launch screen only; the app icon and shared-image entry remain visible. Nerd Mode displays gesture tokens while recording and protects Hide and Reveal from screenshots.</string>
+    <string name="nerd_idle">NERD MODE · Ready\nStart a recording to see live sensors and detected tokens.</string>
+    <string name="nerd_pad">NERD MODE · Gesture Pad\nRaw sensors and fused angles are inactive in pad mode.</string>
+    <string name="nerd_no_tokens">Waiting for a move</string>
+    <string name="nerd_gyro">Gyro rad/s: %1$.2f, %2$.2f, %3$.2f</string>
+    <string name="nerd_no_gyro">Gyro unavailable · accelerometer fallback</string>
+    <string name="nerd_sample">Accel m/s²: %1$.2f, %2$.2f, %3$.2f\n%4$s\nPitch %5$.1f° · Roll %6$.1f°\nα = %7$.2f; predicted = wrap(θ + ω × Δt)\nθ = wrap(predicted + (1 − α) × wrap(θacc − predicted))\nω uses gyro rates transformed to pitch/roll.</string>
+    <string name="nerd_panel">%1$s\nDetected: %2$s</string>
+    <string name="export_title">Export options</string>
+    <string name="export_gallery">Save PNG to gallery</string>
+    <string name="export_document">Save PNG to a chosen folder</string>
+    <string name="export_png_note">Export the original encrypted PNG. Share it as a Document/File so other apps keep its pixels unchanged.</string>
+    <string name="reveal_picker_error">The image picker could not open. Enable a document provider, then choose the vault image again.</string>
+    <string name="history_export_note">Export local event IDs, vault IDs, event types and timestamps as a CSV file. Choose where to save it.</string>
+    <string name="scan_picker_error">The image picker is unavailable. Enable a document provider and try Open image again, or use Take picture.</string>
+    <string name="calc_0">0</string>
+    <string name="calc_description_0">0</string>
+    <string name="calc_1">1</string>
+    <string name="calc_description_1">1</string>
+    <string name="calc_2">2</string>
+    <string name="calc_description_2">2</string>
+    <string name="calc_3">3</string>
+    <string name="calc_description_3">3</string>
+    <string name="calc_4">4</string>
+    <string name="calc_description_4">4</string>
+    <string name="calc_5">5</string>
+    <string name="calc_description_5">5</string>
+    <string name="calc_6">6</string>
+    <string name="calc_description_6">6</string>
+    <string name="calc_7">7</string>
+    <string name="calc_description_7">7</string>
+    <string name="calc_8">8</string>
+    <string name="calc_description_8">8</string>
+    <string name="calc_9">9</string>
+    <string name="calc_description_9">9</string>
+    <string name="calc_clear">C</string>
+    <string name="calc_description_clear">Clear calculation</string>
+    <string name="calc_backspace">⌫</string>
+    <string name="calc_description_backspace">Delete last digit</string>
+    <string name="calc_divide">÷</string>
+    <string name="calc_description_divide">Divide</string>
+    <string name="calc_multiply">×</string>
+    <string name="calc_description_multiply">Multiply</string>
+    <string name="calc_subtract">−</string>
+    <string name="calc_description_subtract">Subtract</string>
+    <string name="calc_add">+</string>
+    <string name="calc_description_add">Add</string>
+    <string name="calc_equals">=</string>
+    <string name="calc_description_equals">Equals</string>
+    <string name="calc_decimal">.</string>
+    <string name="calc_description_decimal">Decimal point</string>
+    <item name="polish_installed" type="id" />
 </resources>

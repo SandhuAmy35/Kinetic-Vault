@@ -31,7 +31,7 @@
         android:layout_marginVertical="@dimen/space_md" android:text="@string/hide_result_note"
         android:textAppearance="@style/TextAppearance.KineticVault.Body" />
     <com.google.android.material.button.MaterialButton android:id="@+id/hide_save"
-        android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hide_save_png" />
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/export_title" />
     <com.google.android.material.button.MaterialButton android:id="@+id/hide_share"
         android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hide_share_file" />
     <com.google.android.material.button.MaterialButton android:id="@+id/hide_finish"

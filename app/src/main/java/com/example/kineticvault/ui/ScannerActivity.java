@@ -41,7 +41,10 @@ public final class ScannerActivity extends InfoActivity {
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state); showPage(R.layout.activity_scanner);
         xray = findViewById(R.id.scan_xray); status = findViewById(R.id.scan_status);
-        findViewById(R.id.scan_choose).setOnClickListener(v -> open.launch(new String[]{"image/*"}));
+        findViewById(R.id.scan_choose).setOnClickListener(v -> {
+            try { open.launch(new String[]{"image/*"}); }
+            catch (RuntimeException error) { showStatus(R.string.scan_picker_error, true); }
+        });
         findViewById(R.id.scan_camera).setOnClickListener(v -> capture());
         findViewById(R.id.scan_reveal).setOnClickListener(v -> reveal());
         if (state != null && state.getString("camera") != null) camera = Uri.parse(state.getString("camera"));
@@ -71,7 +74,7 @@ public final class ScannerActivity extends InfoActivity {
                 Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".files", file);
                 main.post(() -> launchCamera(uri));
             } catch (IOException | RuntimeException error) {
-                main.post(() -> { if (!destroyed) status.setText(R.string.scan_error); });
+                main.post(() -> { if (!destroyed) showStatus(R.string.scan_error, true); });
             }
         });
     }
@@ -79,10 +82,10 @@ public final class ScannerActivity extends InfoActivity {
         if (destroyed) return;
         camera = uri;
         try { take.launch(uri); }
-        catch (RuntimeException error) { status.setText(R.string.scan_camera_error); }
+        catch (RuntimeException error) { showStatus(R.string.scan_camera_error, true); }
     }
     private void scan(Uri uri) {
-        if (!"content".equals(uri.getScheme())) { status.setText(R.string.scan_error); return; }
+        if (!"content".equals(uri.getScheme())) { showStatus(R.string.scan_error, true); return; }
         selected = uri; int ticket = ++generation;
         clearPlane(); status.setText(R.string.scan_working);
         findViewById(R.id.scan_reveal).setVisibility(View.GONE);
@@ -101,7 +104,7 @@ public final class ScannerActivity extends InfoActivity {
             main.post(() -> showResult(ticket, match, result));
         } catch (IOException | RuntimeException | OutOfMemoryError error) {
             if (preview != null) preview.recycle();
-            main.post(() -> { if (!destroyed && ticket == generation) status.setText(R.string.scan_error); });
+            main.post(() -> { if (!destroyed && ticket == generation) showStatus(R.string.scan_error, true); });
         } finally {
             if (image != null) image.recycle();
             if (pixels != null) Arrays.fill(pixels, 0);
@@ -110,9 +113,14 @@ public final class ScannerActivity extends InfoActivity {
     private void showResult(int ticket, boolean found, Bitmap result) {
         if (destroyed || ticket != generation) { if (result != null) result.recycle(); return; }
         plane = result; xray.setPlane(result); xray.setVisibility(found ? View.GONE : View.VISIBLE);
-        status.setText(found ? R.string.scan_found : R.string.scan_absent);
+        showStatus(found ? R.string.scan_found : R.string.scan_absent, false);
+        UiPolish.enter(found ? findViewById(R.id.scan_reveal) : xray);
         findViewById(R.id.scan_reveal).setVisibility(found ? View.VISIBLE : View.GONE);
         status.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
+    }
+    private void showStatus(int text, boolean error) {
+        status.setText(text);
+        if (error) UiPolish.failure(status); else UiPolish.notice(status);
     }
     private void reveal() {
         if (selected == null) return;

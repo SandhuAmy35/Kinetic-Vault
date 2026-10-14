@@ -22,6 +22,7 @@ final class GestureStep {
     private final TextView status, strength;
     private final MaterialButton record, done, forge;
     private final SensorFusionManager sensors;
+    private final com.example.kineticvault.ui.NerdOverlay nerd;
     private GestureSession first, current;
     private byte[] enrolled;
 
@@ -35,20 +36,25 @@ final class GestureStep {
         record = host.findViewById(R.id.hide_record);
         done = host.findViewById(R.id.hide_gesture_done);
         forge = host.findViewById(R.id.hide_forge);
+        nerd = new com.example.kineticvault.ui.NerdOverlay(host.findViewById(R.id.hide_nerd));
         sensors = new SensorFusionManager(host, new GestureRecognizer.Listener() {
-            public void onToken(byte token, long time) { if (current != null) current.addToken(token, time); }
+            public void onToken(byte token, long time) { if (current != null) { nerd.token(token); current.addToken(token, time); } }
             public void onMotion(float pitch, float roll, boolean still, long time) {
                 orb.setAngles(pitch, roll);
                 if (current != null) current.onMotion(time, still);
             }
         });
+        sensors.setTelemetryListener(nerd);
         bind();
         usePad.setChecked(com.example.kineticvault.data.VaultPreferences.current().pad);
         pad.setVisibility(usePad.isChecked() ? View.VISIBLE : View.GONE);
     }
 
     private void bind() {
-        pad.setOnTokenListener((token, time) -> current != null && current.addToken(token, time));
+        pad.setOnTokenListener((token, time) -> {
+            if (current == null) return false;
+            nerd.token(token); return current.addToken(token, time);
+        });
         usePad.setOnCheckedChangeListener((button, checked) -> {
             reset(); pad.setVisibility(checked ? View.VISIBLE : View.GONE);
         });
@@ -61,6 +67,7 @@ final class GestureStep {
 
     private void begin() {
         if (current != null || enrolled != null) return;
+        nerd.begin(usePad.isChecked());
         orb.reset(); orb.setAnimating(true);
         strength.setText(StrengthMeter.label(host, 0, secret.hasPassphrase()));
         status.setText(first == null ? R.string.hide_gesture_record_first : R.string.hide_gesture_record_second);
@@ -87,7 +94,7 @@ final class GestureStep {
     }
 
     private void finishAttempt() {
-        sensors.stop(); orb.setAnimating(false);
+        sensors.stop(); nerd.clear(); orb.setAnimating(false);
         done.setEnabled(false); pad.setEnabled(false);
         if (first == null) {
             first = current; current = null;
@@ -105,6 +112,7 @@ final class GestureStep {
         first = null;
         current.close(); current = null;
         status.setText(R.string.hide_gesture_enrolled);
+        status.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
         forge.setEnabled(true);
     }
 
@@ -117,7 +125,7 @@ final class GestureStep {
     }
 
     void reset() {
-        sensors.stop(); orb.setAnimating(false); orb.reset();
+        sensors.stop(); nerd.clear(); orb.setAnimating(false); orb.reset();
         if (current != null) current.close();
         if (first != null) first.close();
         if (enrolled != null) Arrays.fill(enrolled, (byte) 0);

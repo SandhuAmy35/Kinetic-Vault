@@ -41,6 +41,7 @@ public final class LearnActivity extends InfoActivity {
         if (failed) return;
         failed = true; web.stopLoading(); web.setVisibility(View.GONE);
         findViewById(R.id.learn_error).setVisibility(View.VISIBLE);
+        UiPolish.failure(findViewById(R.id.learn_error));
     }
     @Override protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state); state.putBoolean("remote", remote);

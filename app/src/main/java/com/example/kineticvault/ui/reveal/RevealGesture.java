@@ -13,6 +13,7 @@ import java.util.Arrays;
 final class RevealGesture {
     private final RevealActivity host;
     private final SensorFusionManager sensors;
+    private final com.example.kineticvault.ui.NerdOverlay nerd;
     private final GesturePadView pad;
     private final CheckBox usePad;
     private final TextView status;
@@ -24,30 +25,38 @@ final class RevealGesture {
         pad = host.findViewById(R.id.reveal_pad);
         usePad = host.findViewById(R.id.reveal_use_pad);
         status = host.findViewById(R.id.reveal_gesture_status);
+        nerd = new com.example.kineticvault.ui.NerdOverlay(host.findViewById(R.id.reveal_nerd));
         sensors = new SensorFusionManager(host, new GestureRecognizer.Listener() {
-            public void onToken(byte token, long time) { if (session != null) session.addToken(token, time); }
+            public void onToken(byte token, long time) { if (session != null) { nerd.token(token); session.addToken(token, time); } }
             public void onMotion(float pitch, float roll, boolean still, long time) {
                 if (session != null) session.onMotion(time, still);
             }
         });
-        pad.setOnTokenListener((token, time) -> session != null && session.addToken(token, time));
+        sensors.setTelemetryListener(nerd);
+        pad.setOnTokenListener((token, time) -> {
+            if (session == null) return false;
+            nerd.token(token); return session.addToken(token, time);
+        });
         usePad.setOnCheckedChangeListener((button, checked) -> {
             clear(); pad.setVisibility(checked ? View.VISIBLE : View.GONE);
         });
         host.findViewById(R.id.reveal_record).setOnClickListener(v -> begin());
         host.findViewById(R.id.reveal_done).setOnClickListener(v -> { if (session != null) session.done(); });
         clear();
-    }
         usePad.setChecked(com.example.kineticvault.data.VaultPreferences.current().pad);
         pad.setVisibility(usePad.isChecked() ? View.VISIBLE : View.GONE);
+    }
 
     private void begin() {
-        clear();
+        clear(); nerd.begin(usePad.isChecked());
         session = new GestureSession(new GestureSession.Listener() {
-            public void onProgress(int count) { status.setText(host.getString(R.string.reveal_moves, count)); }
+            public void onProgress(int count) {
+                status.setText(host.getString(R.string.reveal_moves, count));
+                status.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
+            }
             public void onTooShort(int count) { host.message(R.string.gesture_too_short); }
             public void onFinished() {
-                sensors.stop(); tokens = session.takeTokens(); session = null;
+                sensors.stop(); nerd.clear(); tokens = session.takeTokens(); session = null;
                 pad.setEnabled(false); host.findViewById(R.id.reveal_done).setEnabled(false);
                 host.findViewById(R.id.reveal_unlock).setEnabled(true);
                 status.setText(R.string.reveal_gesture_ready);
@@ -68,7 +77,7 @@ final class RevealGesture {
     byte[] takeTokens() { byte[] result = tokens; tokens = null; return result; }
 
     void clear() {
-        sensors.stop();
+        sensors.stop(); nerd.clear();
         if (session != null) session.close();
         if (tokens != null) Arrays.fill(tokens, (byte) 0);
         session = null; tokens = null;

@@ -3,8 +3,10 @@
     android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
         android:text="@string/hide_gesture_instructions" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+<FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content">
     <com.example.kineticvault.ui.KineticOrbView android:id="@+id/hide_orb"
         android:layout_width="match_parent" android:layout_height="240dp" android:background="@drawable/bg_glow_card_cyan" />
+<TextView android:id="@+id/hide_nerd" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="top" android:padding="12dp" android:textSize="12sp" android:fontFamily="monospace" android:background="@drawable/bg_glow_card_violet" android:textColor="?android:attr/textColorPrimary" android:saveEnabled="false" android:freezesText="false" android:visibility="gone" android:text="@string/nerd_idle" /></FrameLayout>
     <TextView android:id="@+id/hide_gesture_status" android:layout_width="match_parent" android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.KineticVault.Body" android:accessibilityLiveRegion="polite" />
     <TextView android:id="@+id/hide_strength" android:layout_width="match_parent" android:layout_height="wrap_content"

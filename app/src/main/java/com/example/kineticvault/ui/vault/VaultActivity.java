@@ -46,6 +46,7 @@ public final class VaultActivity extends AppCompatActivity {
     private VaultEntry selected;
     private int generation;
     private boolean closed;
+    private com.google.android.material.bottomsheet.BottomSheetDialog sheet;
     private final androidx.activity.result.ActivityResultLauncher<String> csv = registerForActivityResult(
             new androidx.activity.result.contract.ActivityResultContracts.CreateDocument("text/csv"), uri -> {
                 if (uri == null) return;
@@ -73,8 +74,12 @@ public final class VaultActivity extends AppCompatActivity {
         }
         insets(); bindList(); bindFilters(); rangeLabel();
         findViewById(R.id.vault_export).setOnClickListener(v -> {
-            try { csv.launch(getString(R.string.history_name)); }
-            catch (RuntimeException error) { failure(R.string.history_error); }
+            if (sheet != null) sheet.dismiss();
+            sheet = com.example.kineticvault.ui.ExportSheet.show(this, R.string.history_export_note,
+                    new int[]{R.string.history_export}, new Runnable[]{() -> {
+                        try { csv.launch(getString(R.string.history_name)); }
+                        catch (RuntimeException error) { failure(R.string.history_error); }
+                    }});
         });
     }
 
@@ -135,6 +140,7 @@ public final class VaultActivity extends AppCompatActivity {
         findViewById(R.id.vault_progress).setVisibility(View.GONE); adapter.replace(entries);
         findViewById(R.id.vault_empty).setVisibility(entries.isEmpty() ? View.VISIBLE : View.GONE);
         findViewById(R.id.vault_list).setVisibility(entries.isEmpty() ? View.GONE : View.VISIBLE);
+        if (entries.isEmpty()) com.example.kineticvault.ui.UiPolish.enter(findViewById(R.id.vault_empty));
         ((TextView) findViewById(R.id.vault_empty_title)).setText(filtered() ? R.string.vault_no_matches : R.string.vault_empty_title);
         ((TextView) findViewById(R.id.vault_empty_text)).setText(filtered() ? R.string.vault_no_matches_text : R.string.vault_empty_text);
         ((TextView) findViewById(R.id.vault_empty_action)).setText(filtered() ? R.string.vault_clear_filters : R.string.home_hide);
@@ -143,6 +149,7 @@ public final class VaultActivity extends AppCompatActivity {
     private void loadFailed() {
         findViewById(R.id.vault_progress).setVisibility(View.GONE);
         findViewById(R.id.vault_error).setVisibility(View.VISIBLE);
+        com.example.kineticvault.ui.UiPolish.failure(findViewById(R.id.vault_error));
         findViewById(R.id.vault_empty).setVisibility(View.GONE);
         findViewById(R.id.vault_list).setVisibility(View.GONE);
     }
@@ -202,9 +209,14 @@ public final class VaultActivity extends AppCompatActivity {
     }
 
     private void failure(int message) {
+        com.example.kineticvault.ui.UiPolish.failure(root);
         Snackbar.make(root, message, Snackbar.LENGTH_LONG).setAction(R.string.vault_retry, view -> load()).show();
     }
 
+    @Override protected void onPause() {
+        if (sheet != null) { sheet.dismiss(); sheet = null; }
+        super.onPause();
+    }
     @Override protected void onResume() { super.onResume(); load(); }
 
     @Override protected void onSaveInstanceState(Bundle state) {

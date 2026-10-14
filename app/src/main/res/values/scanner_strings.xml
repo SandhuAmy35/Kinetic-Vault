@@ -6,7 +6,7 @@
     <string name="scan_idle">Choose an image to inspect its original pixels.</string>
     <string name="scan_working">Reading original pixels…</string>
     <string name="scan_found">Kinetic Vault signature found. Open Reveal to authenticate and unlock it with your gesture and passphrase.</string>
-    <string name="scan_absent">No Kinetic Vault data found</string>
+    <string name="scan_absent">No Kinetic Vault data found. Open the original vault PNG to try again. The X-ray below is for exploration.</string>
     <string name="scan_xray_note">X-ray amplifies the lowest bit of each colour channel. Patterns alone do not prove that an image contains hidden data.</string>
     <string name="scan_reveal">Open in Reveal</string>
     <string name="scan_error">Could not read this image unchanged. Choose an accessible, opaque original image within the device memory limit and try again.</string>

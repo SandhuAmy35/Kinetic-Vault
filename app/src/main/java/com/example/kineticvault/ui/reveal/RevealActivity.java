@@ -32,6 +32,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public final class RevealActivity extends AppCompatActivity {
     private RevealWork work;
+    private com.google.android.material.bottomsheet.BottomSheetDialog sheet;
     private RevealGesture gesture;
     private VaultDoorView door;
     private TextScrambler scrambler;
@@ -94,11 +95,13 @@ public final class RevealActivity extends AppCompatActivity {
 
     private void bind() {
         findViewById(R.id.reveal_pick).setOnClickListener(v -> {
-            lock(); picker.launch(new String[]{"image/*"});
+            lock();
+            try { picker.launch(new String[]{"image/*"}); }
+            catch (RuntimeException error) { message(R.string.reveal_picker_error); }
         });
         findViewById(R.id.reveal_back).setOnClickListener(v -> finish());
         findViewById(R.id.reveal_unlock).setOnClickListener(v -> unlock());
-        findViewById(R.id.reveal_save).setOnClickListener(v -> export(false));
+        findViewById(R.id.reveal_save).setOnClickListener(v -> exportOptions());
         findViewById(R.id.reveal_open).setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.reveal_open).setMessage(R.string.reveal_open_warning)
                 .setNegativeButton(R.string.hide_cancel, null)
@@ -158,7 +161,7 @@ public final class RevealActivity extends AppCompatActivity {
         door.open(() -> {
             findViewById(R.id.reveal_files).setVisibility(View.VISIBLE);
             findViewById(R.id.reveal_open).setVisibility(work.hasFile() ? View.VISIBLE : View.GONE);
-            ((TextView) findViewById(R.id.reveal_save)).setText(work.hasFile() ? R.string.reveal_save : R.string.txt_export);
+            ((TextView) findViewById(R.id.reveal_save)).setText(R.string.export_title);
             if (!work.hasFile()) {
                 char[] text = work.takeText();
                 if (text != null) {
@@ -189,6 +192,15 @@ public final class RevealActivity extends AppCompatActivity {
                 : getString(label));
     }
 
+    private void exportOptions() {
+        if (busy || !work.hasPayload()) return;
+        if (sheet != null) sheet.dismiss();
+        int[] labels = work.hasFile() ? new int[]{R.string.reveal_save, R.string.reveal_open}
+                : new int[]{R.string.txt_export};
+        Runnable[] actions = work.hasFile() ? new Runnable[]{() -> export(false),
+                () -> findViewById(R.id.reveal_open).performClick()} : new Runnable[]{() -> export(false)};
+        sheet = com.example.kineticvault.ui.ExportSheet.show(this, R.string.reveal_file_note, labels, actions);
+    }
     private void export(boolean open) {
         if (busy || !work.hasPayload()) return;
         setBusy(true); message(R.string.reveal_exporting);
@@ -231,7 +243,9 @@ public final class RevealActivity extends AppCompatActivity {
     }
 
     void message(int resource) {
-        if (!isFinishing()) ((TextView) findViewById(R.id.reveal_notice)).setText(resource);
+        if (isFinishing()) return;
+        TextView notice = findViewById(R.id.reveal_notice);
+        notice.setText(resource); com.example.kineticvault.ui.UiPolish.notice(notice);
     }
 
     private void lock() {
@@ -251,12 +265,13 @@ public final class RevealActivity extends AppCompatActivity {
                 ContextCompat.RECEIVER_NOT_EXPORTED);
         registered = true;
         work.protection(enabled -> {
-            if (enabled) getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+            if (enabled || com.example.kineticvault.data.VaultPreferences.current().nerd) getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
             else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         });
     }
 
     @Override protected void onPause() {
+        if (sheet != null) { sheet.dismiss(); sheet = null; }
         gesture.clear(); password.getText().clear();
         if (busy) lock();
         super.onPause();

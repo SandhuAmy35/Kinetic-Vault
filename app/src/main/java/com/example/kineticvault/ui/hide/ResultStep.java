@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
 final class ResultStep {
     private final HideActivity host;
     private final HideWork work;
+    private com.google.android.material.bottomsheet.BottomSheetDialog sheet;
     private final WipeSliderView comparison;
     private final ActivityResultLauncher<String> document;
 
@@ -35,7 +36,7 @@ final class ResultStep {
                 ((DiffMapView) host.findViewById(R.id.hide_diff)).startSweep());
         host.findViewById(R.id.hide_ghost_compare).setOnClickListener(v ->
                 host.startActivity(new Intent(host, GhostComparisonActivity.class)));
-        host.findViewById(R.id.hide_save).setOnClickListener(v -> savePng());
+        host.findViewById(R.id.hide_save).setOnClickListener(v -> exportOptions());
         host.findViewById(R.id.hide_share).setOnClickListener(v -> warnShare());
         host.findViewById(R.id.hide_finish).setOnClickListener(v -> host.finish());
     }
@@ -50,7 +51,7 @@ final class ResultStep {
         busy(false);
     }
 
-    void pause() { ((DiffMapView) host.findViewById(R.id.hide_diff)).stopSweep(); }
+    void pause() { if (sheet != null) { sheet.dismiss(); sheet = null; } ((DiffMapView) host.findViewById(R.id.hide_diff)).stopSweep(); }
 
     void close() {
         comparison.setImages(null, null);
@@ -58,6 +59,21 @@ final class ResultStep {
         ((XRayView) host.findViewById(R.id.hide_xray)).setPlane(null);
     }
 
+    private void exportOptions() {
+        if (sheet != null) sheet.dismiss();
+        int[] labels = Build.VERSION.SDK_INT >= 29
+                ? new int[]{R.string.export_gallery, R.string.export_document, R.string.hide_share_file}
+                : new int[]{R.string.export_document, R.string.hide_share_file};
+        Runnable[] actions = Build.VERSION.SDK_INT >= 29
+                ? new Runnable[]{this::savePng, this::saveDocument, this::warnShare}
+                : new Runnable[]{this::saveDocument, this::warnShare};
+        sheet = com.example.kineticvault.ui.ExportSheet.show(host, R.string.export_png_note, labels, actions);
+    }
+    private void saveDocument() {
+        busy(true);
+        try { document.launch("KineticVault.png"); }
+        catch (RuntimeException error) { busy(false); host.message(R.string.hide_picker_error); }
+    }
     private void savePng() {
         busy(true);
         if (Build.VERSION.SDK_INT >= 29) {

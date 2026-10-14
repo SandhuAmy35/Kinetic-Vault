@@ -16,9 +16,11 @@
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_sm" android:text="@string/reveal_intro"
             android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+<FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content">
         <com.example.kineticvault.ui.VaultDoorView android:id="@+id/reveal_door"
             android:layout_width="match_parent" android:layout_height="220dp"
             android:contentDescription="@string/reveal_door_locked" android:saveEnabled="false" />
+<TextView android:id="@+id/reveal_nerd" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="top" android:padding="12dp" android:textSize="12sp" android:fontFamily="monospace" android:background="@drawable/bg_glow_card_violet" android:textColor="?android:attr/textColorPrimary" android:saveEnabled="false" android:freezesText="false" android:visibility="gone" android:text="@string/nerd_idle" /></FrameLayout>
         <com.google.android.material.button.MaterialButton android:id="@+id/reveal_pick"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:minHeight="@dimen/touch_min" android:text="@string/reveal_pick" />

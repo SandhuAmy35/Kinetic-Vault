@@ -13,7 +13,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 public final class SettingsActivity extends InfoActivity {
     private Spinner sensitivity;
-    private EditText url, key;
+    private EditText url, key, code;
     private int connectionRequest;
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
@@ -25,6 +25,7 @@ public final class SettingsActivity extends InfoActivity {
                 R.array.sensitivity_options, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sensitivity.setAdapter(adapter);
+        code = findViewById(R.id.settings_code);
         url = findViewById(R.id.settings_url); key = findViewById(R.id.settings_key);
         findViewById(R.id.settings_save).setEnabled(false);
         VaultPreferences.load(this, () -> { if (!isDestroyed()) populate(); });
@@ -38,6 +39,8 @@ public final class SettingsActivity extends InfoActivity {
         toggle(R.id.settings_pad).setChecked(p.pad);
         toggle(R.id.settings_protection).setChecked(p.protection);
         toggle(R.id.settings_autolock).setChecked(p.autoLock);
+        toggle(R.id.settings_disguise).setChecked(p.disguise);
+        toggle(R.id.settings_nerd).setChecked(p.nerd);
         url.setText(p.url); key.setText(p.apiKey);
         findViewById(R.id.settings_save).setEnabled(true);
         findViewById(R.id.settings_test).setEnabled(true);
@@ -55,6 +58,7 @@ public final class SettingsActivity extends InfoActivity {
                             : R.string.cloud_connection_error, Snackbar.LENGTH_LONG).show();
                 });
     }
+    @Override protected void onPause() { code.getText().clear(); super.onPause(); }
     @Override protected void onStop() {
         ++connectionRequest; findViewById(R.id.settings_test).setEnabled(true); super.onStop();
     }
@@ -65,11 +69,22 @@ public final class SettingsActivity extends InfoActivity {
                 || parsed.getHost() == null || parsed.getUserInfo() != null)) {
             url.setError(getString(R.string.settings_url_error)); return;
         }
+        char[] entered = new char[code.length()];
+        code.getText().getChars(0, entered.length, entered, 0);
+        if ((entered.length > 0 && !com.example.kineticvault.data.DisguiseCode.valid(entered))
+                || (toggle(R.id.settings_disguise).isChecked() && entered.length == 0
+                && VaultPreferences.current().codeHash.isEmpty())) {
+            java.util.Arrays.fill(entered, '\0');
+            code.setError(getString(R.string.settings_code_error)); return;
+        }
+        code.getText().clear();
         VaultPreferences.Values values = new VaultPreferences.Values(sensitivity.getSelectedItemPosition(),
                 toggle(R.id.settings_pad).isChecked(), toggle(R.id.settings_protection).isChecked(),
-                toggle(R.id.settings_autolock).isChecked(), server, key.getText().toString());
+                toggle(R.id.settings_autolock).isChecked(), server, key.getText().toString(),
+                toggle(R.id.settings_disguise).isChecked(), toggle(R.id.settings_nerd).isChecked(),
+                VaultPreferences.current().codeHash);
         findViewById(R.id.settings_save).setEnabled(false);
-        VaultPreferences.save(this, values, saved -> {
+        VaultPreferences.save(this, values, entered, saved -> {
             if (isDestroyed()) return;
             findViewById(R.id.settings_save).setEnabled(true);
             if (saved) {

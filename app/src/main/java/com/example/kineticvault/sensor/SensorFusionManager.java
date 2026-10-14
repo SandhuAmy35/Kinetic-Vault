@@ -15,6 +15,13 @@ import java.util.Arrays;
 public final class SensorFusionManager implements SensorEventListener {
     public enum Mode { GYROSCOPE_FUSION, ACCELEROMETER_ONLY, UNAVAILABLE }
 
+    public interface TelemetryListener {
+        void onSample(float ax, float ay, float az, float gx, float gy, float gz,
+                      float pitch, float roll, Mode mode);
+    }
+    private TelemetryListener telemetry;
+    private final float[] gyro = new float[3];
+    public void setTelemetryListener(TelemetryListener listener) { telemetry = listener; }
     private final SensorManager sensors;
     private final Handler main = new Handler(Looper.getMainLooper());
     private final GestureRecognizer recognizer;
@@ -65,6 +72,7 @@ public final class SensorFusionManager implements SensorEventListener {
         recognizer.reset();
         Arrays.fill(gravity, 0f);
         Arrays.fill(acceleration, 0f);
+        Arrays.fill(gyro, 0f);
         pitch = roll = accelPitch = accelRoll = angularSpeed = 0f;
         lastGyroNanos = lastAccelNanos = -1;
         initialized = false;
@@ -81,7 +89,10 @@ public final class SensorFusionManager implements SensorEventListener {
         if (!running || event.values.length < 3 || event.timestamp < 0) return;
         for (int i = 0; i < 3; i++) if (!Float.isFinite(event.values[i])) return;
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) accelerometer(event);
-        else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) gyroscope(event);
+        else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            System.arraycopy(event.values, 0, gyro, 0, 3);
+            gyroscope(event);
+        }
     }
 
     private void accelerometer(SensorEvent event) {
@@ -149,6 +160,8 @@ public final class SensorFusionManager implements SensorEventListener {
         float ax = acceleration[0] + g * (float) Math.sin(r);
         float ay = acceleration[1] - g * (float) (Math.sin(p) * Math.cos(r));
         float az = acceleration[2] - g * (float) (Math.cos(p) * Math.cos(r));
+        if (telemetry != null) telemetry.onSample(acceleration[0], acceleration[1], acceleration[2],
+                gyro[0], gyro[1], gyro[2], pitch, roll, mode);
         recognizer.update(timestampNanos / 1_000_000L, pitch, roll, ax, ay, az, angularSpeed);
     }
 

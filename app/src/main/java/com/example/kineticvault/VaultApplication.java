@@ -16,8 +16,8 @@ public final class VaultApplication extends Application {
                 if (--visible == 0) com.example.kineticvault.data.SyncManager.get(VaultApplication.this).stop();
             }
             @Override public void onActivityCreated(android.app.Activity a, android.os.Bundle b) { }
-            @Override public void onActivityResumed(android.app.Activity a) { }
-            @Override public void onActivityPaused(android.app.Activity a) { }
+            @Override public void onActivityResumed(android.app.Activity a) { com.example.kineticvault.ui.UiPolish.install(a); }
+            @Override public void onActivityPaused(android.app.Activity a) { com.example.kineticvault.ui.UiPolish.pause(a); }
             @Override public void onActivitySaveInstanceState(android.app.Activity a, android.os.Bundle b) { }
             @Override public void onActivityDestroyed(android.app.Activity a) { }
         });

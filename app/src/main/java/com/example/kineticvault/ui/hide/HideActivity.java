@@ -32,7 +32,8 @@ public final class HideActivity extends AppCompatActivity {
 
     @Override protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-        if (com.example.kineticvault.data.VaultPreferences.current().protection)
+        if (com.example.kineticvault.data.VaultPreferences.current().protection
+                || com.example.kineticvault.data.VaultPreferences.current().nerd)
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_hide);
@@ -123,6 +124,7 @@ public final class HideActivity extends AppCompatActivity {
         if (isFinishing() || isDestroyed()) return;
         TextView notice = findViewById(R.id.hide_notice);
         notice.setText(resource); notice.setVisibility(View.VISIBLE);
+        com.example.kineticvault.ui.UiPolish.notice(notice);
         Snackbar.make(findViewById(R.id.hide_root), resource, Snackbar.LENGTH_LONG).show();
     }
 
@@ -151,7 +153,8 @@ public final class HideActivity extends AppCompatActivity {
     @Override protected void onResume() {
         super.onResume();
         resumed = true;
-        if (com.example.kineticvault.data.VaultPreferences.current().protection)
+        if (com.example.kineticvault.data.VaultPreferences.current().protection
+                || com.example.kineticvault.data.VaultPreferences.current().nerd)
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         if (secret != null && step == 1) secret.activate();

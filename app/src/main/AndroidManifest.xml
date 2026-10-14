@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.GhostComparisonActivity" android:exported="false" />
+        <activity android:name=".ui.CalculatorActivity" android:exported="false" android:label="@string/calculator_title" />
         <activity android:name=".ui.HomeActivity" android:exported="false" />
         <activity android:name=".ui.SettingsActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.AboutActivity" android:exported="false" />

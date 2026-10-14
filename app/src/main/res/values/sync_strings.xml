@@ -6,12 +6,12 @@
     <string name="cloud_offline">Offline</string>
     <string name="cloud_stats_live">%1$d vaults · %2$d events · %3$d payload bytes</string>
     <string name="cloud_stats_cached">Last received: %1$d vaults · %2$d events · %3$d payload bytes</string>
-    <string name="cloud_stats_unavailable">Server totals will appear when connected.</string>
+    <string name="cloud_stats_unavailable">No server totals yet. Open Settings to configure Cloud Ledger, or keep using your local vaults offline.</string>
     <string name="cloud_queue">%1$d metadata updates queued</string>
     <string name="cloud_airplane">Airplane mode: sync paused. Local vaults remain available. Turn airplane mode off to resume.</string>
     <string name="cloud_retry">Retry sync</string>
     <string name="cloud_recovery">Offline? Open Settings to enter the server URL and API key. Pending updates retry automatically while the app is open.</string>
     <string name="cloud_connecting">Connecting to Cloud Ledger…</string>
     <string name="cloud_connection_ok">Cloud Ledger connected. Save settings to sync metadata.</string>
-    <string name="cloud_connection_error">Could not connect. Turn airplane mode off, then confirm the server URL, API key and dev host in Settings and try again. Local vaults still work.</string>
+    <string name="cloud_connection_error">Could not connect. Turn airplane mode off, then confirm the server URL and API key in Settings and try again. Local vaults still work.</string>
 </resources>

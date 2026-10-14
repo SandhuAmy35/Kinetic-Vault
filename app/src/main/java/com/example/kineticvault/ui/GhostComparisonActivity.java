@@ -60,6 +60,7 @@ public final class GhostComparisonActivity extends AppCompatActivity {
                     if (closed) return;
                     busy = false; setBusy(false);
                     ((TextView) findViewById(R.id.diff_status)).setText(R.string.diff_error);
+                    UiPolish.failure(findViewById(R.id.diff_status));
                 });
             }
         });
