@@ -1,3 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Kinetic Vault</string>
+    <string name="tagline">Your hand is the key.</string>
+    <string name="harness_eyebrow">PHASE 1B · INTEGRITY LAB</string>
+    <string name="harness_title">Trust starts with proof.</string>
+    <string name="harness_intro">One tap tests text and binary secrets in both embedding modes, through a real PNG saved to disk and loaded again.</string>
+    <string name="harness_ready">READY</string>
+    <string name="harness_running">TESTING</string>
+    <string name="harness_pass">PASS</string>
+    <string name="harness_fail">FAIL</string>
+    <string name="harness_run">Run integrity test</string>
+    <string name="harness_run_again">Run again</string>
+    <string name="harness_idle">Four round trips. Zero setup. Fully offline.</string>
+    <string name="harness_pending">Waiting for the test</string>
+    <string name="harness_standard">STANDARD</string>
+    <string name="harness_ghost">GHOST</string>
+    <string name="harness_light_preview">Preview light theme</string>
+    <string name="harness_preview_description">Generated plasma cover used for the PNG round-trip tests</string>
+    <string name="harness_fixture_text">Kinetic Vault test — नमस्ते 🌌 — Your hand is the key.</string>
+    <string name="harness_success">All four PNG round trips passed in %1$d ms. Cover generation: %2$d ms.</string>
+    <string name="harness_case">%1$s · PASS · %2$d ms
+Forge %3$d · Save %4$d · Reload %5$d · Unlock %6$d ms
+PSNR %7$.2f dB · Changed %8$.2f%%
+PNG SHA-256: %9$s…</string>
+    <string name="harness_text">Text</string>
+    <string name="harness_file">Binary file</string>
+    <string name="harness_stage">Test %1$d/4 · %2$s</string>
+    <string name="stage_generate">Generating cover</string>
+    <string name="stage_forge">Packing, encrypting and embedding</string>
+    <string name="stage_save">Saving PNG</string>
+    <string name="stage_reload">Reloading original PNG bytes</string>
+    <string name="stage_unlock">Extracting and decrypting</string>
+    <string name="stage_compare">Comparing bytes and measuring pixels</string>
+    <string name="harness_memory_error">Not enough free memory. Close other apps and run the test again.</string>
+    <string name="harness_io_error">The image or storage check failed. Free some storage, then run again.</string>
+    <string name="harness_crypto_error">The cryptographic check failed. Run again; if it repeats, record your Android version.</string>
+    <string name="harness_unexpected_error">A verification check failed. Run again and record the test stage if it repeats.</string>
+    <string name="harness_failure_stage">%1$s
+Stopped at: %2$s</string>
+    <string name="harness_note">This temporary screen uses public test data. It does not enroll gestures or store real secrets. Test PNGs are removed after each run.</string>
+    <string name="icon_lock">Lock</string>
+    <string name="icon_shield">Shield</string>
+    <string name="icon_scan">Scan</string>
+    <string name="icon_history">History</string>
+    <string name="icon_settings">Settings</string>
+    <string name="icon_back">Back</string>
+    <string name="icon_next">Next</string>
+    <string name="icon_orb">Kinetic orb</string>
 </resources>

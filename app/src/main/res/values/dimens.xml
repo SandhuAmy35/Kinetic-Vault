@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_sm">8dp</dimen>
+    <dimen name="space_md">16dp</dimen>
+    <dimen name="space_lg">24dp</dimen>
+    <dimen name="space_xl">32dp</dimen>
+    <dimen name="touch_min">48dp</dimen>
+    <dimen name="button_height">56dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="orb_size">64dp</dimen>
+    <dimen name="preview_height">160dp</dimen>
+    <dimen name="card_radius">24dp</dimen>
+    <dimen name="control_radius">16dp</dimen>
+    <dimen name="stroke_width">1dp</dimen>
+    <dimen name="type_kicker">12sp</dimen>
+    <dimen name="type_body">16sp</dimen>
+    <dimen name="type_small">14sp</dimen>
+    <dimen name="type_title">28sp</dimen>
+    <dimen name="type_result">48sp</dimen>
+</resources>

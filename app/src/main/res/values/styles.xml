@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.KineticVault.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:minWidth">@dimen/touch_min</item>
+        <item name="cornerRadius">@dimen/control_radius</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="TextAppearance.KineticVault.Title" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">@color/kv_text</item>
+        <item name="android:textSize">@dimen/type_title</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.KineticVault.Body" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textColor">@color/kv_text_secondary</item>
+        <item name="android:textSize">@dimen/type_body</item>
+    </style>
+    <style name="TextAppearance.KineticVault.Kicker" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textColor">@color/kv_primary</item>
+        <item name="android:textSize">@dimen/type_kicker</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.KineticVault.Result" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="android:textColor">@color/kv_text</item>
+        <item name="android:textSize">@dimen/type_result</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

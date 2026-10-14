@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="kv_background">#0A0E1A</color>
+    <color name="kv_surface">#121A2B</color>
+    <color name="kv_surface_high">#1C2940</color>
+    <color name="kv_primary">#00E5FF</color>
+    <color name="kv_on_primary">#06212A</color>
+    <color name="kv_violet">#B39AFF</color>
+    <color name="kv_magenta">#FF6ABB</color>
+    <color name="kv_text">#F4F8FF</color>
+    <color name="kv_text_secondary">#A5B5CB</color>
+    <color name="kv_outline">#5F7493</color>
+    <color name="kv_success">#39FF88</color>
+    <color name="kv_danger">#FF7188</color>
+    <color name="kv_glow_outer">#0D00E5FF</color>
+    <color name="kv_glow_inner">#2600E5FF</color>
+    <color name="kv_violet_glow">#337C4DFF</color>
+</resources>

@@ -1,25 +1,52 @@
 # Kinetic Vault — implementation handoff
 
-## Scope gate
+## Phase 1B completion
 
-Build ONLY Phase 1. Stop after its verification checklist and STATE SNAPSHOT.
-Do not begin Phase 2 until the user sends START PHASE 2.
-The remaining-phase list below is a roadmap, not authorization to implement it.
-No later-phase implementation files have been written.
+Phase 1B is complete and device-verified. The user confirmed four PASS results:
+Standard text, Standard binary file, Ghost text and Ghost binary file.
+This confirmation covers the on-device integrity harness; it is not a claim
+that the separate instrumentation suite or release/R8 build was verified.
+No further builds, tests or web searches were run for this documentation update.
 
-## Phase 1: portable core
+New files: app/src/main/java/com/example/kineticvault/VaultApplication.java; diagnostics/{HarnessReport,HarnessRunner,TestHarnessActivity}.java and image/{ImageMemory,ImageDecoder,ImageStats,ImageFiles,ImageUtils,CoverGenerator}.java under that Java package; app/src/main/res/xml/{file_paths,network_security_config}.xml; res/values/{dimens,styles}.xml; res/values-night/colors.xml; res/drawable/ic_{lock,shield,scan,history,settings,arrow_left,arrow_right,arrow_up,arrow_down,orb}.xml and bg_glow_card_{cyan,violet}.xml; res/anim/{fade_in,slide_up,shake,pulse}.xml; res/layout/activity_test_harness.xml (all res paths are under app/src/main); app/src/test/java/com/example/kineticvault/image/ImagePolicyTest.java; app/src/androidTest/java/com/example/kineticvault/image/{PngFixtures,ImageLayerTest}.java; docs/BUILD_HEALTH.md and docs/PHONE_CHECKLIST.md.
 
-Implemented Java-only payload packing, GZIP, gesture credential encoding,
-PBKDF2-HMAC-SHA256, AES-256-GCM, the 38-byte image header, sequential LSB
-embedding, salt-seeded Fisher-Yates scattering, extraction and bounded decoding.
-No Android types or extra runtime dependencies are used by the core.
-All core operations are synchronous and MUST run on the Android worker executor.
-Progress callbacks run on that worker; UI updates must use the main-thread handler.
+## Scope and authoritative phase map
 
-The existing project uses package com.example.kineticvault, AGP 9.4.1,
-Gradle 9.6.0, Java 11 source compatibility and compile/target SDK 37.
-Only minSdk changes, from 24 to 26. Existing template dependencies are retained.
-The template has no launcher activity yet. This phase is NOT a usable phone app.
+The user authorized Phase 1 and Phase 1B only. Stop after the verification
+checklist and STATE SNAPSHOT. Phase 2 requires an explicit START PHASE 2 line.
+The earlier six-step roadmap was incorrect and is replaced by this map:
+
+| Phase | Scope |
+| --- | --- |
+| 1, including 1B | Core, build health, setup, design resources, image layer, temporary test screen |
+| 2 | Motion + Hide + Reveal |
+| 3 | Data + Server |
+| 4 | Wow layer + Scanner |
+| 5 | Harden + Ship |
+
+No later-phase implementation files have been created. Icons and animation XML
+are Phase 1 design resources; they do not implement later-phase screens or effects.
+
+## Current project
+
+Package com.example.kineticvault; SDK 37; minSdk 26; AGP 9.4.1; Gradle 9.6.0;
+Java 11 source compatibility. The template requests a Java 25 Gradle daemon.
+No runtime or test dependencies were added. Core classes and the wire format
+are byte-for-byte unchanged from the preceding Phase 1 delivery.
+
+TestHarnessActivity is now the temporary exported launcher. VaultApplication
+sets Material 3 DayNight to dark on fresh process start. The test screen has an
+in-memory light-theme preview. System-bar and display-cutout insets are applied.
+The layout scrolls for small screens and large text. Portrait is requested;
+large-screen Android policy may override it, so recreation cancels the test safely.
+
+No CAMERA, storage or INTERNET permission is declared. FileProvider exposes
+only cache/shared/ with explicit URI grants. Backup and device-transfer exclusions
+are supplied. The network policy denies cleartext globally; Phase 3 may add
+explicit development hosts in a debug-only policy.
+
+The nine portable core classes must run on a worker executor. WorkProgress
+callbacks also run on the worker. The current harness follows that contract.
 
 ## Version 1 wire format
 
@@ -94,52 +121,89 @@ wipe gesture/passphrase arrays. Never log or persist those values or plaintext.
 Filenames belong only in the encrypted payload and temporary UI, never cloud metadata.
 Salt and IV are intentionally public in the image, never database fields.
 
-## Remaining phases, in order
+## Phase 1B image layer
 
-1. ImageUtils, generated covers, PNG export, sensor fusion, token detector,
-   enrollment/repeat, pad fallback, lifecycle-safe executor and auto-lock sessions.
-2. Material 3 dark/light resources, portrait activities, edge-to-edge, accessible
-   controls, splash, home, hide, reveal, scanner and a zero-setup demonstration.
-3. Orb HUD, matrix work animation, diff/wipe/loupe, statistics, vault-door reveal,
-   text scramble, denial feedback, calculator disguise and Nerd Mode.
-4. SQLite CRUD, image/text ListView adapter, metadata queue with retries and delete
-   tombstones, Settings, CSV export, expiry pickers, static/remote Learn WebView,
-   About, screen-off/airplane receivers and optional coarse location off by default.
-5. PHP 8 PDO action API, MySQL schema/config, metadata-only sync, connection test,
-   dev-host-only cleartext configuration, XAMPP instructions and offline behavior.
-6. Real-phone PNG interchange and sensor tuning, failure paths, R8 release/AAB,
-   rubric evidence, contribution template, personas/survey, demo/viva/test docs,
-   privacy/store kit and up to three small inventions only after required work passes.
+ImageUtils is the public facade. ImageDecoder, ImageFiles, ImageMemory and
+ImageStats keep each class small enough to explain in a viva.
 
-Use Java/XML, findViewById, Activity Result APIs, HttpURLConnection, org.json,
-Canvas/Paint/ValueAnimator and hand-written vectors. No extra runtime libraries.
-Do not declare CAMERA. Receive original image bytes; never resize or rotate reveal
-images. Hide may resize and flatten transparency before embedding. Always save PNG.
-Sharing must use FileProvider with the Document/File warning. Database and cloud
-availability must never be required to open a self-contained vault image.
+| Public API | Purpose |
+| --- | --- |
+| ImageUtils.source(File) | Reopen original file bytes |
+| ImageUtils.source(ContentResolver, Uri) | Reopen original SAF/provider bytes |
+| ImageUtils.decodeCover(Source, boolean ghost) | Sample, size-limit and flatten a cover |
+| ImageUtils.decodeExact(Source, boolean ghost) | Original dimensions/order, no EXIF or density transform |
+| ImageUtils.flattenOpaque(Bitmap) | Composite onto an opaque dark background before embedding |
+| ImageUtils.thumbnail(Bitmap, int longSide) | Separate display-only preview, at most 512 px |
+| ImageUtils.pixels(Bitmap) | Opaque bitmap to int[] |
+| ImageUtils.fromPixels(int[], int width, int height) | int[] to mutable opaque sRGB bitmap |
+| ImageUtils.savePng(Bitmap, File) | PNG-only write, sync, atomic replace when supported |
+| ImageUtils.sha256(File) | Streaming file digest |
+| ImageUtils.statistics(int[], int[]) | RGB changed count, percentage, maximum delta, PSNR |
+| ImageUtils.psnr(int[], int[]) | RGB PSNR, positive infinity for identical images |
+| ImageUtils.checkMemory(int width, int height, boolean ghost) | Conservative operation budget |
+| CoverGenerator.generate(int width, int height, long seed) | Offline plasma/gradient/noise cover |
 
-## Verification on 2026-10-14
+All image/pixel/file operations are worker-only. Source must return stable original
+bytes across the bounds and decode passes. No thumbnail, EXIF rotation or resizing
+is allowed on the exact path. Exact decode rejects translucent images instead of
+silently flattening them and destroying their LSBs. Covers are flattened before
+embedding. Decoders request and verify mutable ARGB_8888 and sRGB; hardware bitmaps
+are never accepted. Recycle worker-owned bitmaps when finished. UI preview ownership
+is transferred explicitly; never recycle a bitmap still displayed by an ImageView.
 
-- All nine production core classes compile cleanly with javac --release 11.
-- JUnit 4.13.2: 35 tests pass, including an independent Node crypto fixture.
-- The JBR 25 test compilation emitted classes and exited 0, but also reported a
-  ZipFileSystem cleanup AccessDeniedException. This is a local toolchain limitation,
-  not a clean Android build result. Test execution itself exited 0 without stderr.
-- The Android debug/release Gradle build was attempted. Initial dependency
-  resolution failed; using the existing read-only cache progressed to a Gradle
-  GeneratedClassCompilationException before app compilation. No APK, release R8
-  result or device verification is claimed.
-- Local diagnostic logs and test output are under build/core-verification/.
+Covers obey BOTH the 3,000-pixel long-side cap and the 9,000,000-pixel core cap,
+plus the device memory budget. Power-of-two sampling happens before full decoding.
+Pixel-count arithmetic uses long/double to prevent integer overflow.
+Exact decoding rejects oversize images rather than altering their dimensions.
 
-Normal Android Studio verification command, once its Gradle environment works:
+The image allowance is the lesser of half the VM heap limit and remaining VM heap
+minus 24 MiB. Estimated work reserves another 16 MiB plus 28 bytes/pixel for
+Standard or 32 bytes/pixel for Ghost. This conservatively includes bitmap/pixel
+copies and Ghost's shuffle array; it is an estimate, not an OOM guarantee.
+When the mode is not known yet, request the Ghost budget. A top-level worker
+catches allocation failures and the screen offers a retry. Future real-secret
+flows must also account for their live payload buffers.
 
-```powershell
-.\gradlew.bat :app:testDebugUnitTest :app:assembleDebug :app:assembleRelease
-```
+## Temporary integrity screen
+
+HarnessRunner.run(Context, Listener) generates a 640x360 cover and tests:
+1. Standard text.
+2. Standard binary file.
+3. Ghost text.
+4. Ghost binary file.
+
+Every case packs, writes GZIP, derives a key, encrypts, embeds, saves PNG, reloads
+from disk, compares every encoded pixel, extracts, decrypts and compares type,
+filename and payload bytes. It also checks the RGB delta is at most one and records
+PSNR, changed percentage, SHA-256 and real timings. PASS is shown only after all
+four cases succeed. Key derivation/crypto use an indeterminate spinner, not fake
+percentage progress. The public test credential is not a production credential.
+
+Test PNG names are unique per run and deleted in finally blocks. Secret fixtures
+and credential arrays are wiped. Closing/recreating the activity interrupts its
+single worker at safe boundaries, discards stale UI callbacks and releases unused
+previews. PBKDF2 itself may finish before cancellation takes effect. No real secrets,
+gestures, history or network metadata are collected by this screen.
+
+## Verification and delivery
+
+Phase 1B is complete. User-reported device verification confirms all four harness
+cases show PASS: Standard text/file and Ghost text/file. The core and wire format
+remain unchanged. Earlier local evidence: 47 targeted JVM tests passed, AAPT2
+compile/link passed, and Android app/device-test sources emitted bytecode without
+source or deprecation diagnostics. The agent environment blocked full Gradle
+verification with an archive-close access error. Separate instrumentation-suite
+execution and release/R8 verification are not established by the four harness PASS results.
+
+BUILD_HEALTH.md and PHONE_CHECKLIST.md retain the earlier diagnostic instructions
+and checklist. This completion record supersedes their earlier pending-device status.
+No PHASE_1B_FILES.md bundle was created before the user stopped further work.
+Stop here. Phase 2 = Motion + Hide + Reveal, and remains gated on START PHASE 2.
 
 ## Sources
 
-- Android build compatibility: https://developer.android.com/build/releases/agp-9-4-0-release-notes
-- GCM AAD and authentication failures: https://developer.android.com/reference/javax/crypto/Cipher
-- PBEKeySpec password clearing: https://developer.android.com/reference/javax/crypto/spec/PBEKeySpec
-- Specified Random algorithm: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html
+- [Android build compatibility](https://developer.android.com/build/releases/agp-9-4-0-release-notes)
+- [GCM AAD and authentication failures](https://developer.android.com/reference/javax/crypto/Cipher)
+- [PBEKeySpec clearing](https://developer.android.com/reference/javax/crypto/spec/PBEKeySpec)
+- [Specified Random algorithm](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Random.html)
+- [Bitmap decoding options](https://developer.android.com/reference/android/graphics/BitmapFactory.Options)

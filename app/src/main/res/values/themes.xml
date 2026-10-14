@@ -1,16 +1,20 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.KineticVault" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base.Theme.KineticVault" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/kv_primary</item>
+        <item name="colorOnPrimary">@color/kv_on_primary</item>
+        <item name="colorSecondary">@color/kv_violet</item>
+        <item name="colorTertiary">@color/kv_magenta</item>
+        <item name="colorSurface">@color/kv_surface</item>
+        <item name="colorOnSurface">@color/kv_text</item>
+        <item name="colorSurfaceVariant">@color/kv_surface_high</item>
+        <item name="colorOnSurfaceVariant">@color/kv_text_secondary</item>
+        <item name="colorOutline">@color/kv_outline</item>
+        <item name="colorError">@color/kv_danger</item>
+        <item name="android:colorBackground">@color/kv_background</item>
+        <item name="android:windowBackground">@color/kv_background</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="materialButtonStyle">@style/Widget.KineticVault.Button</item>
     </style>
+    <style name="Theme.KineticVault" parent="Base.Theme.KineticVault" />
 </resources>
