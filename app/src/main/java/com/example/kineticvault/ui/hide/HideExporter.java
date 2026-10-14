@@ -18,7 +18,7 @@ import java.io.OutputStream;
 final class HideExporter {
     private HideExporter() { }
 
-    static void saveGallery(Context context, File source) throws IOException {
+    static boolean saveGallery(Context context, File source) throws IOException {
         if (Build.VERSION.SDK_INT < 29) throw new IOException("Document destination required");
         ContentResolver resolver = context.getContentResolver();
         ContentValues values = new ContentValues();
@@ -35,15 +35,20 @@ final class HideExporter {
             values.put(MediaStore.Images.Media.IS_PENDING, 0);
             if (resolver.update(uri, values, null, null) < 1) throw new IOException("Gallery publish failed");
             complete = true;
-            VaultLogger.logExport();
+            return recordExport(context, source);
         } finally {
             if (!complete) resolver.delete(uri, null, null);
         }
     }
 
-    static void saveDocument(Context context, File source, Uri destination) throws IOException {
+    static boolean saveDocument(Context context, File source, Uri destination) throws IOException {
         copy(context.getContentResolver(), source, destination);
-        VaultLogger.logExport();
+        return recordExport(context, source);
+    }
+
+    private static boolean recordExport(Context context, File source) {
+        try { VaultLogger.logExport(context, source); return true; }
+        catch (IOException | RuntimeException error) { return false; }
     }
 
     static Uri shareUri(Context context, File source) throws IOException {

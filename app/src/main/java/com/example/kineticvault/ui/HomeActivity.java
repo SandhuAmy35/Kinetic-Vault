@@ -11,6 +11,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.kineticvault.R;
 import com.example.kineticvault.diagnostics.TestHarnessActivity;
 import com.example.kineticvault.ui.hide.HideActivity;
+import com.example.kineticvault.ui.reveal.RevealActivity;
+import com.example.kineticvault.ui.vault.VaultActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 public final class HomeActivity extends AppCompatActivity {
@@ -28,7 +30,9 @@ public final class HomeActivity extends AppCompatActivity {
         ViewCompat.requestApplyInsets(root);
         findViewById(R.id.home_hide).setOnClickListener(v -> startActivity(new Intent(this, HideActivity.class)));
         findViewById(R.id.home_lab).setOnClickListener(v -> startActivity(new Intent(this, TestHarnessActivity.class)));
-        int[] upcoming = {R.id.home_reveal, R.id.home_scan, R.id.home_history, R.id.home_settings};
+        findViewById(R.id.home_reveal).setOnClickListener(v -> startActivity(new Intent(this, RevealActivity.class)));
+        findViewById(R.id.home_history).setOnClickListener(v -> startActivity(new Intent(this, VaultActivity.class)));
+        int[] upcoming = {R.id.home_scan, R.id.home_settings};
         for (int id : upcoming) {
             View tile = findViewById(id);
             ViewCompat.setStateDescription(tile, getString(R.string.home_coming_soon));

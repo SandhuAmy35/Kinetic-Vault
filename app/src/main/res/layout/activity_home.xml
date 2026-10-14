@@ -21,8 +21,8 @@
             android:background="@drawable/bg_glow_card_violet" android:clickable="true" android:focusable="true"
             android:contentDescription="@string/home_reveal">
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center"
-                android:padding="@dimen/space_lg" android:text="@string/home_reveal" android:enabled="false"
-                android:alpha="0.6" android:importantForAccessibility="no"
+                android:padding="@dimen/space_lg" android:text="@string/home_reveal"
+                android:importantForAccessibility="no"
                 android:textAppearance="@style/TextAppearance.KineticVault.Body" />
         </FrameLayout>
         <com.google.android.material.button.MaterialButton android:id="@+id/home_lab"
@@ -41,10 +41,10 @@
         <FrameLayout android:id="@+id/home_history" android:layout_width="match_parent" android:layout_height="wrap_content"
             android:minHeight="80dp" android:layout_marginVertical="@dimen/space_sm"
             android:background="@drawable/bg_glow_card_violet" android:clickable="true" android:focusable="true"
-            android:contentDescription="@string/home_history">
+            android:contentDescription="@string/vault_home">
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center"
-                android:padding="@dimen/space_lg" android:text="@string/home_history" android:enabled="false"
-                android:alpha="0.6" android:importantForAccessibility="no"
+                android:padding="@dimen/space_lg" android:text="@string/vault_home"
+                android:importantForAccessibility="no"
                 android:textAppearance="@style/TextAppearance.KineticVault.Body" />
         </FrameLayout>
         <FrameLayout android:id="@+id/home_settings" android:layout_width="match_parent" android:layout_height="wrap_content"

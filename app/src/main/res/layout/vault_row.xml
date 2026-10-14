@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="96dp"
+    android:orientation="horizontal" android:gravity="center_vertical" android:padding="@dimen/space_md"
+    android:background="@drawable/bg_glow_card_cyan" android:descendantFocusability="blocksDescendants">
+    <ImageView android:id="@+id/vault_row_thumbnail" android:layout_width="64dp" android:layout_height="64dp"
+        android:layout_marginEnd="@dimen/space_md" android:scaleType="centerCrop" android:src="@drawable/ic_lock"
+        android:contentDescription="@string/vault_thumbnail" />
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+        <TextView android:id="@+id/vault_row_title" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.KineticVault.Body" android:textStyle="bold" />
+        <TextView android:id="@+id/vault_row_date" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <TextView android:id="@+id/vault_row_size" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <TextView android:id="@+id/vault_row_expiry" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.KineticVault.Body" android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>

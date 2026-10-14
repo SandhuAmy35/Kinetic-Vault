@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vault_root" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@color/kv_background">
+    <com.google.android.material.button.MaterialButton android:id="@+id/vault_back"
+        style="@style/Widget.Material3.Button.TextButton" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/vault_back"
+        app:icon="@drawable/ic_arrow_left" android:contentDescription="@string/vault_back" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/vault_title" android:textAppearance="@style/TextAppearance.KineticVault.Title" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_sm" android:text="@string/vault_intro"
+        android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:hint="@string/vault_search_hint">
+        <com.google.android.material.textfield.TextInputEditText android:id="@+id/vault_search"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp"
+            android:inputType="text" android:maxLines="1" android:imeOptions="actionSearch" android:saveEnabled="false" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+        <com.google.android.material.button.MaterialButton android:id="@+id/vault_filter"
+            style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/vault_filter" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/vault_clear_filter"
+            style="@style/Widget.Material3.Button.TextButton" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/vault_clear_filters"
+            android:visibility="gone" />
+    </LinearLayout>
+    <TextView android:id="@+id/vault_range" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/vault_all_dates" android:textAppearance="@style/TextAppearance.KineticVault.Body"
+        android:accessibilityLiveRegion="polite" android:layout_marginBottom="@dimen/space_sm" />
+    <ProgressBar android:id="@+id/vault_progress" style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent" android:layout_height="4dp" android:indeterminate="true"
+        android:contentDescription="@string/vault_loading" android:visibility="gone" />
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <ListView android:id="@+id/vault_list" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:divider="@android:color/transparent" android:dividerHeight="8dp" android:clipToPadding="false"
+            android:paddingVertical="@dimen/space_sm" android:visibility="gone" />
+        <ScrollView android:id="@+id/vault_empty" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:fillViewport="true" android:visibility="gone">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:gravity="center" android:padding="@dimen/space_lg"
+                android:background="@drawable/bg_glow_card_violet">
+                <ImageView android:layout_width="64dp" android:layout_height="64dp" android:src="@drawable/ic_lock"
+                    android:contentDescription="@string/vault_empty_icon" />
+                <TextView android:id="@+id/vault_empty_title" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:gravity="center" android:layout_marginTop="@dimen/space_md" android:text="@string/vault_empty_title"
+                    android:textAppearance="@style/TextAppearance.KineticVault.Title" />
+                <TextView android:id="@+id/vault_empty_text" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:gravity="center" android:text="@string/vault_empty_text"
+                    android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/vault_empty_action"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="48dp"
+                    android:layout_marginTop="@dimen/space_md" android:text="@string/home_hide" />
+            </LinearLayout>
+        </ScrollView>
+        <ScrollView android:id="@+id/vault_error" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:fillViewport="true" android:visibility="gone">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:gravity="center" android:padding="@dimen/space_lg"
+                android:background="@drawable/bg_glow_card_violet">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:gravity="center" android:text="@string/vault_load_error"
+                    android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/vault_retry"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="48dp"
+                    android:text="@string/vault_retry" />
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+</LinearLayout>

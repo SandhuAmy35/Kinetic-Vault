@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/reveal_root" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true" android:background="@color/kv_background"
+    android:saveEnabled="false" android:importantForAutofill="noExcludeDescendants">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:paddingVertical="@dimen/space_lg">
+        <com.google.android.material.button.MaterialButton android:id="@+id/reveal_back"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:minHeight="@dimen/touch_min" android:text="@string/hide_return_home"
+            android:contentDescription="@string/hide_return_home" app:icon="@drawable/ic_arrow_left" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/reveal_title" android:textAppearance="@style/TextAppearance.KineticVault.Title" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm" android:text="@string/reveal_intro"
+            android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <com.example.kineticvault.ui.VaultDoorView android:id="@+id/reveal_door"
+            android:layout_width="match_parent" android:layout_height="220dp"
+            android:contentDescription="@string/reveal_door_locked" android:saveEnabled="false" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/reveal_pick"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:minHeight="@dimen/touch_min" android:text="@string/reveal_pick" />
+        <TextView android:id="@+id/reveal_notice" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:padding="@dimen/space_md"
+            android:background="@drawable/bg_glow_card_cyan" android:accessibilityLiveRegion="polite"
+            android:text="@string/reveal_locked" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <ProgressBar android:id="@+id/reveal_progress" style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:indeterminate="true" android:max="100" android:visibility="gone" />
+        <TextView android:id="@+id/reveal_attempts" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginVertical="@dimen/space_sm"
+            android:accessibilityLiveRegion="polite" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <LinearLayout android:id="@+id/reveal_credentials" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+            <TextView android:id="@+id/reveal_gesture_status" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:accessibilityLiveRegion="polite"
+                android:text="@string/reveal_gesture_prompt" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+            <CheckBox android:id="@+id/reveal_use_pad" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:minHeight="@dimen/touch_min" android:text="@string/hide_use_pad" />
+            <com.example.kineticvault.gesture.GesturePadView android:id="@+id/reveal_pad"
+                android:layout_width="match_parent" android:layout_height="280dp" android:visibility="gone"
+                android:contentDescription="@string/gesture_pad_description" android:saveEnabled="false" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/reveal_record"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:minHeight="@dimen/touch_min" android:text="@string/reveal_record" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/reveal_done"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:minHeight="@dimen/touch_min" android:text="@string/hide_done" android:enabled="false" />
+            <EditText android:id="@+id/reveal_passphrase" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:minHeight="@dimen/button_height"
+                android:hint="@string/reveal_password" android:inputType="textPassword"
+                android:imeOptions="flagNoPersonalizedLearning" android:singleLine="true"
+                android:saveEnabled="false" android:importantForAutofill="no" android:visibility="gone" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/reveal_unlock"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:minHeight="@dimen/button_height" android:text="@string/reveal_unlock" android:enabled="false" />
+        </LinearLayout>
+        <TextView android:id="@+id/reveal_text" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:padding="@dimen/space_lg"
+            android:background="@drawable/bg_glow_card_violet" android:visibility="gone"
+            android:saveEnabled="false" android:freezesText="false" android:textIsSelectable="false"
+            android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <LinearLayout android:id="@+id/reveal_files" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/reveal_file_note" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/reveal_save"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:minHeight="@dimen/touch_min" android:text="@string/reveal_save" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/reveal_open"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:minHeight="@dimen/touch_min" android:text="@string/reveal_open" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -1,42 +1,30 @@
 # STATE SNAPSHOT
-
-Phase 1B COMPLETE — device-verified, four PASS, confirmed by the user:
-Standard text, Standard binary file, Ghost text and Ghost binary file.
-Core crypto and wire format remain frozen. Phase 2A and the 2B Hide flow are implemented.
-
-Authoritative phases: 1 foundation (including 1B); 2 Motion + Hide + Reveal;
-3 Data + Server; 4 Wow layer + Scanner; 5 Harden + Ship.
-
-New files: app/src/main/java/com/example/kineticvault/VaultApplication.java; diagnostics/{HarnessReport,HarnessRunner,TestHarnessActivity}.java and image/{ImageMemory,ImageDecoder,ImageStats,ImageFiles,ImageUtils,CoverGenerator}.java under that Java package; app/src/main/res/xml/{file_paths,network_security_config}.xml; res/values/{dimens,styles}.xml; res/values-night/colors.xml; res/drawable/ic_{lock,shield,scan,history,settings,arrow_left,arrow_right,arrow_up,arrow_down,orb}.xml and bg_glow_card_{cyan,violet}.xml; res/anim/{fade_in,slide_up,shake,pulse}.xml; res/layout/activity_test_harness.xml (all res paths are under app/src/main); app/src/test/java/com/example/kineticvault/image/ImagePolicyTest.java; app/src/androidTest/java/com/example/kineticvault/image/{PngFixtures,ImageLayerTest}.java; docs/BUILD_HEALTH.md and docs/PHONE_CHECKLIST.md.
-
-Public APIs: ImageUtils.decodeCover(Source, boolean), decodeExact(Source, boolean),
-pixels(Bitmap), fromPixels(int[], int, int), savePng(Bitmap, File), thumbnail(Bitmap, int),
-sha256(File), psnr(int[], int[]); CoverGenerator.generate(int, int, long);
-HarnessRunner.run(Context, Listener). Image, crypto and disk work run off-thread.
-
-Decisions: mutable sRGB ARGB_8888; covers flattened and limited by pixel count,
-long side and memory; exact decode preserves pixel order; PNG-only output;
-Ghost memory allowance includes shuffle storage. Dark-default Material 3;
-private FileProvider; backups disabled; no CAMERA permission.
-
-Earlier evidence: 47 JVM tests passed; resource compile/link passed. Agent Gradle
-verification was environment-blocked. Separate instrumentation and release/R8
-verification remain unconfirmed. No builds, tests or web searches ran in this update.
-
-STOPPED after 2B. Await the next explicit START step.
-
-2A files: sensor/SensorFusionManager.java; gesture/{GestureRecognizer,GestureSession,StrengthMeter,GesturePadView}.java; res/values/gesture_ids.xml. Java paths are under the existing app package.
-SensorFusionManager(Context, GestureRecognizer.Listener): Mode start(), void stop(), void resetGesture(); main-thread lifecycle calls for onResume/onPause.
-GestureRecognizer(Executor, Listener): void update(long,float,float,float,float,float,float), void reset(); injected main executor delivers onToken(byte,long) and onMotion(float,float,boolean,long).
-GestureSession(Listener): boolean addToken(byte,long), void onMotion(long,boolean), boolean done(), int size(), boolean isFinished(), static boolean matches(GestureSession,GestureSession), byte[] takeTokens(), void reset(), void close().
-StrengthMeter: static double bits(int), static String label(Context,int,boolean); GesturePadView: constructors (Context), (Context,AttributeSet), (Context,AttributeSet,int), void setOnTokenListener(OnTokenListener), boolean performClick(); listener boolean onToken(byte,long).
-2A decisions: pure Java recognizer/session; pitch BACK-positive and roll RIGHT-positive; monotonic milliseconds; main sensor callbacks; accelerometer fallback; stop sensors and close sessions on pause; wipe transferred tokens after engine use.
-Constants holds all motion tuning; strings/dimens and pad accessibility actions added. No screens added. Enrollment compares two distinct completed sessions before taking tokens.
-
-2B Java files: ui/{HomeActivity,KineticOrbView,MatrixRainView,WipeComparisonView}.java; ui/hide/{HideActivity,HideWork,HideStore,HideForge,HideExporter,CoverStep,SecretStep,GestureStep,ResultStep,SecretInput}.java; data/VaultLogger.java.
-2B resources: layout/activity_{home,hide}.xml and hide_step_{cover,secret,gesture,forge,result}.xml; strings.xml additions; Home is the launcher, Hide is portrait, Integrity Lab opens the existing harness; FileProvider also exposes cache/capture/ for TakePicture.
-KineticOrbView(Context), KineticOrbView(Context,AttributeSet): void setAngles(float,float), setTokenCount(int,boolean), setAnimating(boolean), reset().
-MatrixRainView(Context), MatrixRainView(Context,AttributeSet): void setProgress(int,int), setRunning(boolean); WipeComparisonView(Context), WipeComparisonView(Context,AttributeSet): void setImages(Bitmap,Bitmap), setFraction(float).
-SecretInput(char[],Uri,boolean,boolean): PayloadCodec.Payload read(ContentResolver), void close(); VaultLogger: static void logHide(), logReveal(), logExport() (no-op).
-2B decisions: exact packed/GZIP capacity on a single worker; prepared payload stays in memory; matching enrollment required; engine stage progress with indeterminate KDF; worker PNG/statistics/export; MediaStore 29+, CreateDocument below; FileProvider sharing warns Document/File.
-Credentials and payload buffers are cleared after use/cancel; pausing discards enrollment and interrupts forging at safe engine boundaries; sensitive fields are not saved/autofilled, FLAG_SECURE is enabled. Reveal and other future tiles only show coming-soon explanations.
+Phase 1B complete; Phase 2A motion, 2B Hide, 2C Reveal and 3A SQLite + Vault list implemented. Core crypto and version 1 wire format are frozen.
+Phases: 1 foundation; 2 Motion + Hide + Reveal; 3 Data + Server; 4 Wow layer + Scanner; 5 Harden + Ship. STOPPED after 3A; await next explicit START.
+Paths below: Java under app/src/main/java/com/example/kineticvault/; resources under app/src/main/res/.
+Foundation files: VaultApplication.java; diagnostics/{HarnessReport,HarnessRunner,TestHarnessActivity}.java; image/{ImageMemory,ImageDecoder,ImageStats,ImageFiles,ImageUtils,CoverGenerator}.java.
+Foundation resources: xml/{file_paths,network_security_config}.xml; values/{dimens,styles}.xml; values-night/colors.xml; drawable/ic_{lock,shield,scan,history,settings,arrow_left,arrow_right,arrow_up,arrow_down,orb}.xml; drawable/bg_glow_card_{cyan,violet}.xml; anim/{fade_in,slide_up,shake,pulse}.xml; layout/activity_test_harness.xml.
+Existing test files: app/src/test/java/com/example/kineticvault/image/ImagePolicyTest.java; app/src/androidTest/java/com/example/kineticvault/image/{PngFixtures,ImageLayerTest}.java. Other docs: IMPLEMENTATION.md, BUILD_HEALTH.md, PHONE_CHECKLIST.md.
+ImageUtils: static Source source(File), source(ContentResolver,Uri); Bitmap decodeCover(Source,boolean), decodeExact(Source,boolean), flattenOpaque(Bitmap), thumbnail(Bitmap,int), fromPixels(int[],int,int); int[] pixels(Bitmap); void savePng(Bitmap,File), checkMemory(int,int,boolean), requireWorker(); String sha256(File); ImageStats statistics(int[],int[]); double psnr(int[],int[]).
+CoverGenerator: static Bitmap generate(int,int,long); HarnessRunner: static run(Context,Listener). All image, crypto, disk and database work belongs on workers.
+Image decisions: mutable sRGB ARGB_8888; sampled/flattened/memory-limited covers; exact original pixels for Reveal; PNG output; Ghost budget includes shuffle storage. Dark-default Material 3, private FileProvider, backups disabled, no CAMERA permission.
+2A files: sensor/SensorFusionManager.java; gesture/{GestureRecognizer,GestureSession,StrengthMeter,GesturePadView}.java; values/gesture_ids.xml.
+SensorFusionManager(Context,GestureRecognizer.Listener): Mode start(); void stop(), resetGesture(). GestureRecognizer(Executor,Listener): void update(long,float,float,float,float,float,float), reset(); listener onToken(byte,long), onMotion(float,float,boolean,long).
+GestureSession(Listener): boolean addToken(byte,long), done(), isFinished(); void onMotion(long,boolean), reset(), close(); int size(); byte[] takeTokens(); static boolean matches(GestureSession,GestureSession).
+StrengthMeter: static double bits(int); static String label(Context,int,boolean). GesturePadView(Context[,AttributeSet[,int]]): void setOnTokenListener(OnTokenListener); boolean performClick(); listener boolean onToken(byte,long).
+Motion decisions: BACK-positive pitch, RIGHT-positive roll, monotonic milliseconds, accelerometer fallback, all thresholds in Constants. Stop sensors/close sessions on pause; compare separate enrollment sessions; wipe transferred tokens after use.
+2B files: ui/{HomeActivity,KineticOrbView,MatrixRainView,WipeComparisonView}.java; ui/hide/{HideActivity,HideWork,HideStore,HideForge,HideExporter,CoverStep,SecretStep,GestureStep,ResultStep,SecretInput}.java; data/VaultLogger.java.
+2B resources: layout/activity_{home,hide}.xml; layout/hide_step_{cover,secret,gesture,forge,result}.xml; values/strings.xml. Home launcher; Hide portrait; TakePicture uses cache/capture/.
+KineticOrbView(Context[,AttributeSet]): void setAngles(float,float), setTokenCount(int,boolean), setAnimating(boolean), reset(). MatrixRainView(Context[,AttributeSet]): void setProgress(int,int), setRunning(boolean). WipeComparisonView(Context[,AttributeSet]): void setImages(Bitmap,Bitmap), setFraction(float).
+SecretInput(char[],Uri,boolean,boolean): PayloadCodec.Payload read(ContentResolver); void close(). Hide uses exact packed/GZIP capacity, in-memory payload, matched enrollment, engine progress/indeterminate KDF; worker PNG/statistics/export; MediaStore 29+, CreateDocument below; PNG sharing warns Document/File.
+Hide wipes credentials/payload on use/cancel; pause interrupts at safe boundaries; secret fields are not saved/autofilled; FLAG_SECURE. Scanner and Settings remain coming-soon tiles.
+2C files: ui/reveal/{RevealActivity,RevealWork,RevealGesture}.java; ui/{VaultDoorView,TextScrambler}.java; layout/activity_reveal.xml. Portrait Reveal accepts Intent data/EXTRA_STREAM/ClipData/OpenDocument; decodeExact/readHeader on worker.
+VaultDoorView(Context[,AttributeSet]): void open(Runnable), deny(), reset(). TextScrambler(TextView): void show(char[]), clear(); owns supplied characters. Reveal: single gesture, neutral denial/attempts/shake/haptics, door animation before text/file actions.
+Auto-lock: SCREEN_OFF receiver via ContextCompat, unregister onStop; stop wipes secrets; screen-off finishes. Default screenshot_protection=true. Save/Open uses worker temporary decrypted copies, CreateDocument/FileProvider grants; cleanup after return/cancel/destruction.
+3A new files: data/{VaultDatabaseHelper,VaultEntry,VaultRepository}.java; ui/vault/{VaultActivity,VaultAdapter,VaultDialogs}.java; ui/reveal/{RevealLedger,RevealExport}.java; layout/{activity_vault,vault_row}.xml; values/vault_strings.xml. VaultLogger and Hide/Reveal/Export hooks updated; Vault tile enabled; private files/vaults/ added to FileProvider.
+VaultDatabaseHelper(Context): SQLiteOpenHelper onCreate(SQLiteDatabase), onUpgrade(SQLiteDatabase,int,int), onConfigure(SQLiteDatabase); schema vaults(id,uuid,title,image_uri,image_sha256,payload_type,payload_bytes,capacity_bytes,ghost,uses_passphrase,created_at,expires_at,thumb,sync_state,deleted,lat,lng), events(id,vault_uuid,type,ts); upgrades add columns in place, never drop tables.
+VaultEntry(): metadata fields only. VaultRepository(Context): long insert(VaultEntry); List<VaultEntry> search(String,Long,Long); VaultEntry findByHash(String); void rename(String,String), setExpiry(String,Long), softDelete(String), record(VaultEntry,String,Integer,Long), close(); static void requireWorker(). Search dates use inclusive start/exclusive end; queries bind user values.
+VaultLogger: static VaultEntry capture(Context,Uri,Bitmap,boolean,boolean); void logHide(Context,File,Bitmap,int,long,boolean,boolean), logReveal(Context,VaultEntry,boolean,int,long), logExport(Context,VaultEntry), logExport(Context,File), logAutoLock(Context,VaultEntry); all worker-only; events HIDE/REVEAL_OK/REVEAL_FAIL/AUTOLOCK/EXPORT linked by UUID.
+3A storage decisions: SHA-256 identifies original encrypted PNG copies under private UUID paths; 96px encrypted thumbnails; generic default titles; no keys, gestures, salts, IVs, secret filenames or plaintext in SQLite. Imported payload_type=0/bytes=0 until successful unlock; lat/lng stay null; sync_state 0=pending, 1=synced, 2=failed, no network in 3A.
+3A UI: ListView/custom thumbnail adapter with worker decoding; search/debounced refresh, creation-date pickers, rename dialog, expiry date/time pickers, soft-delete confirmation, empty/error recovery states, haptics/insets, tap opens original PNG in Reveal. Export failures distinguish a saved file from an unsaved event.
+Assumption: expiry marks local metadata only; it does not change the encrypted PNG or enforce destruction. Soft delete hides the entry while retaining its encrypted copy and event history.

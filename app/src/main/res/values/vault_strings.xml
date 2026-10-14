@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="vault_title">Your Vault</string>
+    <string name="vault_intro">Encrypted images kept on this device. Tap to reveal; hold an entry to rename, set expiry, or delete.</string>
+    <string name="vault_home">Vault</string>
+    <string name="vault_back">Back</string>
+    <string name="vault_default_title">Untitled vault</string>
+    <string name="vault_search_hint">Search vault titles</string>
+    <string name="vault_filter">Date range</string>
+    <string name="vault_clear_filters">Clear filters</string>
+    <string name="vault_all_dates">All creation dates</string>
+    <string name="vault_range_label">Created: %1$s — %2$s</string>
+    <string name="vault_range_start">First creation date</string>
+    <string name="vault_range_end">Last creation date</string>
+    <string name="vault_choose_date">Choose date</string>
+    <string name="vault_loading">Loading your vault list</string>
+    <string name="vault_date_time">%1$s · %2$s</string>
+    <string name="vault_size">Payload: %1$s · Capacity: %2$s</string>
+    <string name="vault_size_unknown">Payload size available after unlocking</string>
+    <string name="vault_expires">Expiry: %1$s</string>
+    <string name="vault_expired">Expired: %1$s</string>
+    <string name="vault_empty_title">Your vault starts here.</string>
+    <string name="vault_empty_text">Forge an encrypted PNG or choose a vault image in Reveal. Its encrypted image and a generic title appear here.</string>
+    <string name="vault_no_matches">No matching vaults.</string>
+    <string name="vault_no_matches_text">Try another title or clear the search and date range to see your vaults.</string>
+    <string name="vault_empty_icon">Empty vault</string>
+    <string name="vault_thumbnail">Encrypted vault image thumbnail</string>
+    <string name="vault_rename">Rename</string>
+    <string name="vault_title_hint">Vault title</string>
+    <string name="vault_title_note">Use a neutral label. Titles are stored as local metadata; keep secrets and filenames out of them.</string>
+    <string name="vault_title_required">Enter a title to save.</string>
+    <string name="vault_save">Save</string>
+    <string name="vault_set_expiry">Set expiry</string>
+    <string name="vault_clear_expiry">Clear expiry</string>
+    <string name="vault_expiry_note">Choose a date and time to mark this local entry as expired. The PNG remains unlockable and copies keep their original contents.</string>
+    <string name="vault_delete">Delete</string>
+    <string name="vault_delete_note">Remove this entry from your Vault list? The local encrypted image and event history are retained. Exported PNG copies remain available.</string>
+    <string name="vault_updated">Vault updated.</string>
+    <string name="vault_retry">Retry</string>
+    <string name="vault_load_error">Your vault list could not load. Free some storage or close other apps, then tap Retry.</string>
+    <string name="vault_update_error">This change could not be saved. Free some storage, tap Retry, and apply the change again.</string>
+    <string name="vault_open_error">This vault could not open. Tap Retry, or choose its original PNG from Reveal.</string>
+    <string name="vault_record_error">The local vault record could not be saved. Free some storage, then choose the original PNG again.</string>
+    <string name="vault_event_error">The vault opened, but its event could not be saved. Free some storage before trying again.</string>
+    <string name="vault_saved_event_error">The file was saved, but its local export event could not be recorded. Free some storage before saving again.</string>
+</resources>

@@ -25,7 +25,7 @@ final class ResultStep {
         comparison = host.findViewById(R.id.hide_comparison);
         document = host.registerForActivityResult(new ActivityResultContracts.CreateDocument("image/png"), uri -> {
             if (uri == null) { busy(false); return; }
-            save(() -> { HideExporter.saveDocument(host, work.store.output, uri); return true; });
+            save(() -> HideExporter.saveDocument(host, work.store.output, uri));
         });
         ((SeekBar) host.findViewById(R.id.hide_wipe)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar bar, int progress, boolean fromUser) { comparison.setFraction(progress / 100f); }
@@ -47,7 +47,7 @@ final class ResultStep {
     private void savePng() {
         busy(true);
         if (Build.VERSION.SDK_INT >= 29) {
-            save(() -> { HideExporter.saveGallery(host, work.store.output); return true; });
+            save(() -> HideExporter.saveGallery(host, work.store.output));
         } else {
             try { document.launch("KineticVault.png"); }
             catch (RuntimeException error) { busy(false); host.message(R.string.hide_picker_error); }
@@ -57,7 +57,9 @@ final class ResultStep {
     private void save(Callable<Boolean> action) {
         busy(true);
         work.run(action, new HideWork.Callback<Boolean>() {
-            public void success(Boolean ignored) { busy(false); host.message(R.string.hide_saved); }
+            public void success(Boolean logged) {
+                busy(false); host.message(logged ? R.string.hide_saved : R.string.vault_saved_event_error);
+            }
             public void failure(int message) { busy(false); host.message(R.string.hide_export_error); }
         });
     }
@@ -87,9 +89,9 @@ final class ResultStep {
     }
 
     private void logShare() {
-        work.run(() -> { VaultLogger.logExport(); return true; }, new HideWork.Callback<Boolean>() {
+        work.run(() -> { VaultLogger.logExport(host, work.store.output); return true; }, new HideWork.Callback<Boolean>() {
             public void success(Boolean ignored) { }
-            public void failure(int message) { }
+            public void failure(int message) { host.message(R.string.vault_record_error); }
         });
     }
 

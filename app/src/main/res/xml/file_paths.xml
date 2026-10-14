@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Only deliberately prepared files can be shared. -->
+    <files-path name="vault_images" path="vaults/" />
     <cache-path name="shared_png" path="shared/" />
     <cache-path name="camera_cover" path="capture/" />
+    <cache-path name="revealed_file" path="reveal/" />
 </paths>

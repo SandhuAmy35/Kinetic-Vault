@@ -40,12 +40,14 @@ final class HideForge {
         progress.update(R.string.hide_stage_render, 0, 0);
         Bitmap bitmap = ImageUtils.fromPixels(encoded, cover.getWidth(), cover.getHeight());
         try {
-            return finish(context, cover, bitmap, original, encoded, progress, guard);
+            return finish(context, cover, bitmap, original, encoded, progress, guard,
+                    payload.type, payload.data.length, ghost, passphrase.length > 0);
         } finally { bitmap.recycle(); }
     }
 
     private static Result finish(Context context, Bitmap cover, Bitmap encoded, int[] original,
-                                 int[] pixels, HideWork.Progress progress, Runnable guard) throws IOException {
+                                 int[] pixels, HideWork.Progress progress, Runnable guard,
+                                 int type, long bytes, boolean ghost, boolean usesPassphrase) throws IOException {
         File directory = new File(context.getCacheDir(), "shared");
         if (!directory.isDirectory() && !directory.mkdirs()) throw new IOException("Output storage unavailable");
         File file = new File(directory, "kinetic-" + UUID.randomUUID() + ".png");
@@ -59,7 +61,7 @@ final class HideForge {
             before = ImageUtils.thumbnail(cover, 512);
             after = ImageUtils.thumbnail(encoded, 512);
             guard.run();
-            VaultLogger.logHide();
+            VaultLogger.logHide(context, file, encoded, type, bytes, ghost, usesPassphrase);
             complete = true;
             return new Result(file, before, after, stats);
         } finally {
