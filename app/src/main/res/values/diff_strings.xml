@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diff_description">Channel difference map. Touch to inspect a pixel; activate to inspect the center.</string>
+    <string name="diff_legend">DIFF MAP PRO · Red: R changed · Green: G changed · Blue: B changed. Combined changes mix colors; black means unchanged.</string>
+    <string name="diff_touch">Touch and drag the map to inspect exact source RGB values and least significant bits. Activate to inspect the center pixel.</string>
+    <string name="diff_pixel">Pixel (%1$d, %2$d)
+Before: %3$s
+After: %4$s</string>
+    <string name="diff_rgb">RGB %1$d / %2$d / %3$d · LSB %4$d / %5$d / %6$d</string>
+    <string name="diff_replay">Replay scan sweep</string>
+    <string name="diff_xray_description">X-RAY · Encoded RGB least significant bits amplified to 0 or 255. No original image needed.</string>
+    <string name="diff_preview_note">Diff previews combine changed channels within each display bin; the loupe magnifies those bins. RGB values and statistics use exact source pixels. X-ray previews sample the LSB plane; natural images also contain LSB noise.</string>
+    <string name="diff_stats">Pixels changed: %1$d
+Image changed: %2$.4f%%
+Maximum channel change: %3$d/255
+PSNR: %4$s</string>
+    <string name="diff_db">%1$.2f dB</string>
+    <string name="diff_infinite">∞ dB (identical)</string>
+    <string name="diff_compare">Ghost vs Standard</string>
+    <string name="diff_demo_note">Same generated 320 × 320 cover, same 2,048-byte public demo payload and credentials, compression off. Each encryption uses fresh salt and IV, so ciphertext and change counts differ. Standard clusters changes; Ghost spreads them. Both have a visible header and use the same encryption.</string>
+    <string name="diff_demo_payload">Kinetic Vault public visualization demo. </string>
+    <string name="diff_standard">STANDARD</string>
+    <string name="diff_ghost">GHOST</string>
+    <string name="diff_loading">Building both maps…</string>
+    <string name="diff_ready">Maps ready. Ghost changes placement, not encryption strength.</string>
+    <string name="diff_error">Could not build the comparison. Tap Generate again to retry, or go back.</string>
+    <string name="diff_generate">Generate again</string>
+    <string name="diff_back">Back to result</string>
+</resources>

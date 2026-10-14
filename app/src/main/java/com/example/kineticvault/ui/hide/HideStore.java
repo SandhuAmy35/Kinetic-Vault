@@ -39,6 +39,7 @@ final class HideStore implements AutoCloseable {
     private boolean compress, ghost;
     private File capture;
     File output;
+    private HideForge.Result rendered;
 
     HideStore(Context context) { this.context = context.getApplicationContext(); }
 
@@ -114,9 +115,11 @@ final class HideStore implements AutoCloseable {
                            Runnable guard) throws Exception {
         if (prepared == null || cover == null) throw new IOException("Prepare the secret again");
         try {
+            releaseRendered();
             HideForge.Result result = HideForge.run(context, cover, prepared, tokens,
                     passphrase, compress, ghost, progress, guard);
             output = result.file;
+            rendered = result;
             return result;
         } finally { clearPrepared(); }
     }
@@ -132,5 +135,11 @@ final class HideStore implements AutoCloseable {
         cover = null;
     }
 
-    @Override public void close() { clearCover(); deleteCapture(); }
+    private void releaseRendered() {
+        if (rendered == null) return;
+        rendered.before.recycle(); rendered.after.recycle(); rendered.visuals.close();
+        rendered = null;
+    }
+
+    @Override public void close() { clearCover(); deleteCapture(); releaseRendered(); }
 }

@@ -45,3 +45,11 @@ Server: PHP 8/PDO prepared statements; POST JSON/X-API-KEY actions health/upsert
 Home ledger strip/status/retry/airplane banner; Settings Test Connection live; repository mutation hooks; foreground Application lifecycle starts/stops sync and unregisters airplane receiver; INTERNET permission.
 Privacy: explicit metadata allowlist; random installation UUID; no titles, filenames, images, locations or encryption credentials uploaded; local vault flows remain independent of server.
 Assumptions: foreground-only sync; debug HTTP exact hosts 10.0.2.2/localhost/127.0.0.1/sample 192.168.1.100 (replace with PC LAN IP); release HTTPS only; metadata ledger is not image backup.
+
+4A implemented: Diff Map Pro + Ghost/Standard demo; STOPPED after 4A, await next explicit START.
+4A new ui/: DiffMapData, DiffMapView, WipeSliderView, XRayView, DiffStats, GhostComparisonActivity, GhostComparisonWork; res/layout/activity_ghost_comparison.xml; res/values/diff_strings.xml.
+DiffMapData: static build(int[],int[],int,int), buildXRay(int[],int,int); int original(int,int), encoded(int,int); void close(). Worker-only construction/cleanup; owns exact arrays and bounded preview bitmaps.
+DiffMapView(Context[,AttributeSet]): void setData(DiffMapData), bindLoupe(TextView), startSweep(), stopSweep(); boolean performClick(). WipeSliderView(Context[,AttributeSet]): void setImages(Bitmap,Bitmap). XRayView(Context[,AttributeSet]): void setPlane(Bitmap). DiffStats: static void show(TextView,ImageStats).
+HideForge builds channel maps/X-ray on HideWork; ResultStep replaces simple slider with wipe, scan sweep, touch RGB/LSB loupe, exact statistics and comparison launch; HideStore owns cleanup, HideActivity detaches views before disposal.
+Maps OR changed RGB channels into bounded black preview bins; loupe magnifies preview bins but reports exact original/encoded pixel values. X-ray samples amplified encoded LSBs without requiring an original.
+Assumption: Ghost/Standard uses the same public 2,048-byte demo payload, generated cover and ephemeral credentials; fresh independent salt/IV per embedding, no user-secret reuse or persistence.

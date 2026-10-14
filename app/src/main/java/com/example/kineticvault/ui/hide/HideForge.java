@@ -8,6 +8,7 @@ import com.example.kineticvault.core.VaultEngine;
 import com.example.kineticvault.data.VaultLogger;
 import com.example.kineticvault.image.ImageStats;
 import com.example.kineticvault.image.ImageUtils;
+import com.example.kineticvault.ui.DiffMapData;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -17,8 +18,9 @@ final class HideForge {
         final File file;
         final Bitmap before, after;
         final ImageStats stats;
-        Result(File file, Bitmap before, Bitmap after, ImageStats stats) {
-            this.file = file; this.before = before; this.after = after; this.stats = stats;
+        final DiffMapData visuals;
+        Result(File file, Bitmap before, Bitmap after, ImageStats stats, DiffMapData visuals) {
+            this.file = file; this.before = before; this.after = after; this.stats = stats; this.visuals = visuals;
         }
     }
 
@@ -53,6 +55,7 @@ final class HideForge {
         File file = new File(directory, "kinetic-" + UUID.randomUUID() + ".png");
         Bitmap before = null, after = null;
         boolean complete = false;
+        DiffMapData visuals = null;
         try {
             progress.update(R.string.hide_stage_save, 0, 0);
             ImageUtils.savePng(encoded, file);
@@ -60,13 +63,15 @@ final class HideForge {
             ImageStats stats = ImageUtils.statistics(original, pixels);
             before = ImageUtils.thumbnail(cover, 512);
             after = ImageUtils.thumbnail(encoded, 512);
+            visuals = DiffMapData.build(original, pixels, cover.getWidth(), cover.getHeight());
             guard.run();
             VaultLogger.logHide(context, file, encoded, type, bytes, ghost, usesPassphrase);
             complete = true;
-            return new Result(file, before, after, stats);
+            return new Result(file, before, after, stats, visuals);
         } finally {
             if (!complete) {
                 file.delete();
+                if (visuals != null) visuals.close();
                 if (before != null) before.recycle();
                 if (after != null) after.recycle();
             }

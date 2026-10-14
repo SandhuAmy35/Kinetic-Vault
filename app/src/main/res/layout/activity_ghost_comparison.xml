@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/diff_root" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <com.google.android.material.button.MaterialButton android:id="@+id/diff_back"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/diff_back" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/diff_compare" android:textAppearance="@style/TextAppearance.KineticVault.Title" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/diff_demo_note" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/diff_legend" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <TextView android:id="@+id/diff_status" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:accessibilityLiveRegion="polite" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/diff_progress"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:indeterminate="true" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+                android:orientation="vertical" android:background="@drawable/bg_glow_card_cyan" android:padding="8dp">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/diff_standard"
+                    android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+                <com.example.kineticvault.ui.DiffMapView android:id="@+id/diff_standard"
+                    android:layout_width="match_parent" android:layout_height="180dp" />
+                <TextView android:id="@+id/diff_standard_stats" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+                <TextView android:id="@+id/diff_standard_pixel" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="@string/diff_touch" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+                android:orientation="vertical" android:background="@drawable/bg_glow_card_violet" android:padding="8dp">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/diff_ghost"
+                    android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+                <com.example.kineticvault.ui.DiffMapView android:id="@+id/diff_ghost"
+                    android:layout_width="match_parent" android:layout_height="180dp" />
+                <TextView android:id="@+id/diff_ghost_stats" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+                <TextView android:id="@+id/diff_ghost_pixel" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="@string/diff_touch" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+            </LinearLayout>
+        </LinearLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/diff_replay"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/diff_replay" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/diff_retry"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/diff_generate" />
+    </LinearLayout>
+</ScrollView>

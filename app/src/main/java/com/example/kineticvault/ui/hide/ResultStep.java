@@ -4,20 +4,23 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import com.example.kineticvault.R;
 import com.example.kineticvault.data.VaultLogger;
-import com.example.kineticvault.ui.WipeComparisonView;
+import com.example.kineticvault.ui.WipeSliderView;
+import com.example.kineticvault.ui.DiffMapView;
+import com.example.kineticvault.ui.XRayView;
+import com.example.kineticvault.ui.DiffStats;
+import com.example.kineticvault.ui.GhostComparisonActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.concurrent.Callable;
 
 final class ResultStep {
     private final HideActivity host;
     private final HideWork work;
-    private final WipeComparisonView comparison;
+    private final WipeSliderView comparison;
     private final ActivityResultLauncher<String> document;
 
     ResultStep(HideActivity host, HideWork work) {
@@ -27,11 +30,11 @@ final class ResultStep {
             if (uri == null) { busy(false); return; }
             save(() -> HideExporter.saveDocument(host, work.store.output, uri));
         });
-        ((SeekBar) host.findViewById(R.id.hide_wipe)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            public void onProgressChanged(SeekBar bar, int progress, boolean fromUser) { comparison.setFraction(progress / 100f); }
-            public void onStartTrackingTouch(SeekBar bar) { }
-            public void onStopTrackingTouch(SeekBar bar) { }
-        });
+        ((DiffMapView) host.findViewById(R.id.hide_diff)).bindLoupe(host.findViewById(R.id.hide_loupe));
+        host.findViewById(R.id.hide_diff_replay).setOnClickListener(v ->
+                ((DiffMapView) host.findViewById(R.id.hide_diff)).startSweep());
+        host.findViewById(R.id.hide_ghost_compare).setOnClickListener(v ->
+                host.startActivity(new Intent(host, GhostComparisonActivity.class)));
         host.findViewById(R.id.hide_save).setOnClickListener(v -> savePng());
         host.findViewById(R.id.hide_share).setOnClickListener(v -> warnShare());
         host.findViewById(R.id.hide_finish).setOnClickListener(v -> host.finish());
@@ -39,9 +42,20 @@ final class ResultStep {
 
     void show(HideForge.Result result) {
         comparison.setImages(result.before, result.after);
-        ((TextView) host.findViewById(R.id.hide_statistics)).setText(host.getString(R.string.hide_stats,
-                result.stats.psnrDb, result.stats.changedPercent));
+        DiffMapView diff = host.findViewById(R.id.hide_diff);
+        diff.setData(result.visuals);
+        diff.startSweep();
+        ((XRayView) host.findViewById(R.id.hide_xray)).setPlane(result.visuals.xray);
+        DiffStats.show(host.findViewById(R.id.hide_statistics), result.stats);
         busy(false);
+    }
+
+    void pause() { ((DiffMapView) host.findViewById(R.id.hide_diff)).stopSweep(); }
+
+    void close() {
+        comparison.setImages(null, null);
+        ((DiffMapView) host.findViewById(R.id.hide_diff)).setData(null);
+        ((XRayView) host.findViewById(R.id.hide_xray)).setPlane(null);
     }
 
     private void savePng() {

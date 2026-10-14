@@ -159,6 +159,7 @@ public final class HideActivity extends AppCompatActivity {
 
     @Override protected void onPause() {
         resumed = false;
+        if (result != null) result.pause();
         if (gesture != null) gesture.reset();
         if (rain != null) rain.setRunning(false);
         if (secret != null) secret.deactivate();
@@ -178,6 +179,7 @@ public final class HideActivity extends AppCompatActivity {
 
     @Override protected void onDestroy() {
         if (secret != null) { secret.deactivate(); secret.close(); }
+        if (result != null) result.close();
         if (work != null) work.close();
         super.onDestroy();
     }

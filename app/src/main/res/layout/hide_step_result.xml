@@ -5,11 +5,26 @@
         android:text="@string/hide_result_title" android:textAppearance="@style/TextAppearance.KineticVault.Title" />
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
         android:text="@string/hide_comparison_labels" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
-    <com.example.kineticvault.ui.WipeComparisonView android:id="@+id/hide_comparison"
+    <com.example.kineticvault.ui.WipeSliderView android:id="@+id/hide_comparison"
         android:layout_width="match_parent" android:layout_height="240dp" android:background="@drawable/bg_glow_card_cyan" />
-    <SeekBar android:id="@+id/hide_wipe" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:minHeight="@dimen/touch_min" android:max="100" android:progress="50"
-        android:contentDescription="@string/hide_wipe_description" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/diff_legend" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    <com.example.kineticvault.ui.DiffMapView android:id="@+id/hide_diff"
+        android:layout_width="match_parent" android:layout_height="240dp" />
+    <TextView android:id="@+id/hide_loupe" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/diff_touch" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/hide_diff_replay"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp"
+        android:text="@string/diff_replay" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/diff_xray_description" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    <com.example.kineticvault.ui.XRayView android:id="@+id/hide_xray"
+        android:layout_width="match_parent" android:layout_height="200dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/diff_preview_note" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/hide_ghost_compare"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp"
+        android:text="@string/diff_compare" />
     <TextView android:id="@+id/hide_statistics" android:layout_width="match_parent" android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.KineticVault.Body" />
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
