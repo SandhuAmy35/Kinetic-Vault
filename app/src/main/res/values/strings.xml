@@ -250,4 +250,18 @@ Stopped at: %2$s</string>
     <string name="calc_decimal">.</string>
     <string name="calc_description_decimal">Decimal point</string>
     <item name="polish_installed" type="id" />
+    <string name="invention_expired">This vault has reached its local expiry. Open Vault, change or clear its expiry, then choose the image again to unlock. This policy uses the device clock and does not erase copies.</string>
+    <string name="invention_replay">Privately replay enrolled gesture</string>
+    <string name="invention_replay_note">Your matched moves appear one at a time. Keep the screen private; this preview clears when dismissed or paused. Snap and Flat are named below the title.</string>
+    <string name="invention_replay_move">Move %1$d of %2$d · %3$s</string>
+    <string name="invention_proof_share">Share comparison proof sheet</string>
+    <string name="invention_proof_title">KINETIC VAULT · COMPARISON SHEET</string>
+    <string name="invention_before">Before · display preview</string>
+    <string name="invention_after">After · display preview</string>
+    <string name="invention_density">Coarse change density</string>
+    <string name="invention_proof_pixels">Source: %1$d × %2$d px · Changed pixels: %3$.2f%%</string>
+    <string name="invention_proof_stats">PSNR: %1$.2f dB · Maximum channel change: %2$d</string>
+    <string name="invention_proof_footer">Display only · Preview LSBs stripped · 16 × 16 binned density map</string>
+    <string name="invention_proof_footer_two">Measured source statistics · No decrypted content or credentials · Not an unlockable vault</string>
+    <string name="invention_proof_warning">This sheet reveals the cover image, coarse change locations and image statistics. Share only if that cover is safe to disclose. It is a display image, not a vault or cryptographic proof. Send the PNG as Document/File to keep the sheet clear.</string>
 </resources>

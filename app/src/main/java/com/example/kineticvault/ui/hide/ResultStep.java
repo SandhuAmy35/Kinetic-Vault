@@ -62,10 +62,10 @@ final class ResultStep {
     private void exportOptions() {
         if (sheet != null) sheet.dismiss();
         int[] labels = Build.VERSION.SDK_INT >= 29
-                ? new int[]{R.string.export_gallery, R.string.export_document, R.string.hide_share_file}
+                ? new int[]{R.string.export_gallery, R.string.export_document, R.string.hide_share_file, R.string.invention_proof_share}
                 : new int[]{R.string.export_document, R.string.hide_share_file};
         Runnable[] actions = Build.VERSION.SDK_INT >= 29
-                ? new Runnable[]{this::savePng, this::saveDocument, this::warnShare}
+                ? new Runnable[]{this::savePng, this::saveDocument, this::warnShare, this::warnProof}
                 : new Runnable[]{this::saveDocument, this::warnShare};
         sheet = com.example.kineticvault.ui.ExportSheet.show(host, R.string.export_png_note, labels, actions);
     }
@@ -100,18 +100,26 @@ final class ResultStep {
                 .setPositiveButton(R.string.hide_share_file, (dialog, which) -> prepareShare()).show();
     }
 
-    private void prepareShare() {
+    private void warnProof() {
+        new MaterialAlertDialogBuilder(host).setTitle(R.string.hide_share_title)
+                .setMessage(R.string.invention_proof_warning).setNegativeButton(R.string.hide_cancel, null)
+                .setPositiveButton(R.string.invention_proof_share, (dialog, which) -> prepareShare(true)).show();
+    }
+
+    private void prepareShare() { prepareShare(false); }
+
+    private void prepareShare(boolean proof) {
         busy(true);
-        work.run(() -> HideExporter.shareUri(host, work.store.output), new HideWork.Callback<Uri>() {
+        work.run(() -> proof ? work.store.proofUri() : HideExporter.shareUri(host, work.store.output), new HideWork.Callback<Uri>() {
             public void success(Uri uri) {
                 busy(false);
                 Intent intent = new Intent(Intent.ACTION_SEND).setType("image/png")
                         .putExtra(Intent.EXTRA_STREAM, uri)
                         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.setClipData(ClipData.newRawUri(host.getString(R.string.hide_png_file), uri));
+                intent.setClipData(ClipData.newRawUri(host.getString(proof ? R.string.invention_proof_title : R.string.hide_png_file), uri));
                 try {
                     host.startActivity(Intent.createChooser(intent, host.getString(R.string.hide_share_file)));
-                    logShare();
+                    if (!proof) logShare();
                 } catch (RuntimeException error) { host.message(R.string.hide_share_error); }
             }
             public void failure(int message) { busy(false); host.message(R.string.hide_export_error); }

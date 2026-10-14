@@ -1,5 +1,5 @@
 ﻿# STATE SNAPSHOT
-Implemented through 4C; STOPPED after WOW POLISH, await explicit START. Core/version1 wire format frozen; docs/IMPLEMENTATION.md format authority. Java/XML only; no dependencies; workers for crypto/pixels/disk/network/DB; original bytes for Reveal/Scan; PNG exports; no CAMERA permission.
+Implemented through 4D; STOPPED after INVENTIONS, await explicit START. Core/version1 wire format frozen; docs/IMPLEMENTATION.md format authority. Java/XML only; no dependencies; workers for crypto/pixels/disk/network/DB; original bytes for Reveal/Scan; PNG exports; no CAMERA permission.
 Paths: Java app/src/main/java/com/example/kineticvault/; resources app/src/main/res/. Other docs BUILD_HEALTH.md/PHONE_CHECKLIST.md contain historical Phase1B information.
 Foundation: VaultApplication; diagnostics/{HarnessReport,HarnessRunner,TestHarnessActivity}; image/{ImageMemory,ImageDecoder,ImageStats,ImageFiles,ImageUtils,CoverGenerator}; design tokens/glow cards/vector icons/animations; private FileProvider cache/shared,capture,reveal and files/vaults.
 ImageUtils static Source source(File), source(ContentResolver,Uri); Bitmap decodeCover(Source,boolean), decodeExact(Source,boolean), flattenOpaque(Bitmap), thumbnail(Bitmap,int), fromPixels(int[],int,int); int[] pixels(Bitmap); savePng(Bitmap,File), checkMemory(int,int,boolean), requireWorker(); String sha256(File); ImageStats statistics(int[],int[]); double psnr(int[],int[]). CoverGenerator static generate(int,int,long); HarnessRunner static run(Context,Listener).
@@ -30,3 +30,8 @@ SensorFusionManager setTelemetryListener(TelemetryListener); callback onSample(f
 ExportSheet static BottomSheetDialog show(Activity,int,int[],Runnable[]); Hide gallery/document/share options retain file-share warning; Reveal save/open and history CSV sheets; dismiss on pause.
 UiPolish static install(Activity), enter(View), feedback(View), notice(View), failure(View), pause(Activity); application-wide entrance/button touch feedback, reduced-motion preference respected for new transitions; Vault/Learn/Scanner/comparison recovery feedback and picker errors polished; RevealGesture constructor statements repaired.
 4C decision: optional location tags omitted to keep this step simple; no location permission or collection. Core/wire format untouched.
+
+4D: ui/reveal/RevealExpiry.java gates new unlocks against fresh local expiry before/after decrypt; device-clock/local-only policy, recover via Vault expiry controls; no file destruction or copy-wide expiry.
+4D: ui/hide/GestureReplay.java opt-in protected enrollment replay; transient clone wipes on finish/dismiss/reset/pause; reduced-motion aware; hide_step_gesture replay button.
+4D: ui/hide/ProofSheet.java worker PNG with LSB-stripped previews/coarse16×16 density/source stats; ResultStep export action warns cover disclosure and sends FileProvider PNG; HideStore owns cached sheet.
+4D docs: INVENTIONS.md; strings.xml/vault_strings.xml; no new public APIs, dependencies or core/wire changes; stopped after INVENTIONS.

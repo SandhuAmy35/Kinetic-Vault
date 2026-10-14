@@ -32,7 +32,7 @@
     <string name="vault_save">Save</string>
     <string name="vault_set_expiry">Set expiry</string>
     <string name="vault_clear_expiry">Clear expiry</string>
-    <string name="vault_expiry_note">Choose a date and time to mark this local entry as expired. The PNG remains unlockable and copies keep their original contents.</string>
+    <string name="vault_expiry_note">Reveal refuses new unlocks after this local expiry, using the device clock. Change or clear expiry here to restore access. This is a local reminder policy: it does not erase data, close an already open secret, or expire copies on other devices.</string>
     <string name="vault_delete">Delete</string>
     <string name="vault_delete_note">Remove this entry from your Vault list? The local encrypted image and event history are retained. Exported PNG copies remain available.</string>
     <string name="vault_updated">Vault updated.</string>

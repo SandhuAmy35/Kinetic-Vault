@@ -25,9 +25,11 @@ final class GestureStep {
     private final com.example.kineticvault.ui.NerdOverlay nerd;
     private GestureSession first, current;
     private byte[] enrolled;
+    private final GestureReplay replay;
 
     GestureStep(HideActivity host, SecretStep secret) {
         this.host = host; this.secret = secret;
+        replay = new GestureReplay(host);
         orb = host.findViewById(R.id.hide_orb);
         pad = host.findViewById(R.id.hide_gesture_pad);
         usePad = host.findViewById(R.id.hide_use_pad);
@@ -61,6 +63,7 @@ final class GestureStep {
         record.setOnClickListener(v -> begin());
         done.setOnClickListener(v -> { if (current != null) current.done(); });
         forge.setOnClickListener(v -> host.forge());
+        host.findViewById(R.id.hide_gesture_replay).setOnClickListener(v -> replay.show(enrolled));
         host.findViewById(R.id.hide_gesture_reset).setOnClickListener(v -> reset());
         reset();
     }
@@ -114,9 +117,11 @@ final class GestureStep {
         status.setText(R.string.hide_gesture_enrolled);
         status.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
         forge.setEnabled(true);
+        host.findViewById(R.id.hide_gesture_replay).setEnabled(true);
     }
 
     byte[] takeTokens() {
+        replay.clear();
         if (enrolled == null) return null;
         byte[] result = enrolled;
         enrolled = null;
@@ -125,6 +130,8 @@ final class GestureStep {
     }
 
     void reset() {
+        replay.clear();
+        host.findViewById(R.id.hide_gesture_replay).setEnabled(false);
         sensors.stop(); nerd.clear(); orb.setAnimating(false); orb.reset();
         if (current != null) current.close();
         if (first != null) first.close();

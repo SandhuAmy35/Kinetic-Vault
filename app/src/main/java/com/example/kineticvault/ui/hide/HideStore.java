@@ -40,6 +40,7 @@ final class HideStore implements AutoCloseable {
     private File capture;
     File output;
     private HideForge.Result rendered;
+    private File proof;
 
     HideStore(Context context) { this.context = context.getApplicationContext(); }
 
@@ -135,7 +136,14 @@ final class HideStore implements AutoCloseable {
         cover = null;
     }
 
+    Uri proofUri() throws IOException {
+        if (proof == null) proof = ProofSheet.create(context, rendered);
+        return HideExporter.shareUri(context, proof);
+    }
+
     private void releaseRendered() {
+        if (proof != null) proof.delete();
+        proof = null;
         if (rendered == null) return;
         rendered.before.recycle(); rendered.after.recycle(); rendered.visuals.close();
         rendered = null;

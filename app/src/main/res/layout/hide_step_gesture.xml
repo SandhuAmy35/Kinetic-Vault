@@ -23,6 +23,10 @@
     <com.google.android.material.button.MaterialButton android:id="@+id/hide_gesture_reset"
         style="@style/Widget.Material3.Button.TextButton" android:minHeight="@dimen/touch_min"
         android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hide_reset_gesture" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/hide_gesture_replay"
+        style="@style/Widget.Material3.Button.TextButton" android:minHeight="@dimen/touch_min"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/invention_replay" android:enabled="false" />
     <com.google.android.material.button.MaterialButton android:id="@+id/hide_forge"
         android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hide_forge" android:enabled="false" />
 </LinearLayout>

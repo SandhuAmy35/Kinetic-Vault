@@ -88,10 +88,12 @@ final class RevealWork {
         PayloadCodec.Payload result = null;
         try {
             synchronized (this) { requireCurrent(ticket); }
+            RevealExpiry.requireAllowed(context, entry);
             result = VaultEngine.reveal(source, moves, password, (stage, done, total) -> {
                 synchronized (this) { requireCurrent(ticket); }
                 deliver(ticket, () -> progress.onProgress(stage, done, total));
             });
+            RevealExpiry.requireAllowed(context, entry);
             char[] decoded = result.type == PayloadCodec.TEXT ? decodeText(result.data) : null;
             int type = result.type; long bytes = result.data.length;
             synchronized (this) {
@@ -106,6 +108,9 @@ final class RevealWork {
             boolean logged = ledger.revealed(entry, true, type, bytes);
             deliver(ticket, () -> callback.success(logged));
         } catch (CancellationException ignored) {
+        } catch (RevealExpiry.Expired error) {
+            discardResult(ticket);
+            deliver(ticket, () -> callback.failure(R.string.invention_expired));
         } catch (OutOfMemoryError error) {
             discardResult(ticket);
             ledger.revealed(entry, false, 0, 0);
