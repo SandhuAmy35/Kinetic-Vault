@@ -1,0 +1,13 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/info_root" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:background="@color/kv_background">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingVertical="24dp">
+        <com.google.android.material.button.MaterialButton android:id="@+id/info_back" style="@style/Widget.Material3.Button.TextButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/vault_back" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/scan_title" android:textAppearance="@style/TextAppearance.KineticVault.Title" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="16dp" android:text="@string/scan_intro" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/scan_choose" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/scan_choose" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/scan_camera" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/scan_camera" />
+        <TextView android:id="@+id/scan_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginVertical="16dp" android:padding="20dp" android:background="@drawable/bg_glow_card_cyan" android:text="@string/scan_idle" android:accessibilityLiveRegion="polite" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/scan_reveal" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:visibility="gone" android:text="@string/scan_reveal" />
+        <com.example.kineticvault.ui.XRayView android:id="@+id/scan_xray" android:layout_width="match_parent" android:layout_height="280dp" android:visibility="gone" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="16dp" android:text="@string/scan_xray_note" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    </LinearLayout>
+</ScrollView>

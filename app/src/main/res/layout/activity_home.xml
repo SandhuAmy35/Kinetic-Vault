@@ -61,8 +61,8 @@
             android:background="@drawable/bg_glow_card_violet" android:clickable="true" android:focusable="true"
             android:contentDescription="@string/home_scan">
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center"
-                android:padding="@dimen/space_lg" android:text="@string/home_scan" android:enabled="false"
-                android:alpha="0.6" android:importantForAccessibility="no"
+                android:padding="@dimen/space_lg" android:text="@string/home_scan"
+                android:importantForAccessibility="no"
                 android:textAppearance="@style/TextAppearance.KineticVault.Body" />
         </FrameLayout>
         <FrameLayout android:id="@+id/home_history" android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -83,5 +83,8 @@
                 android:importantForAccessibility="no"
                 android:textAppearance="@style/TextAppearance.KineticVault.Body" />
         </FrameLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/home_learn"
+            style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="80dp" android:text="@string/learn_title" />
     </LinearLayout>
 </ScrollView>

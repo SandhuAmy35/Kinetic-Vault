@@ -1,0 +1,23 @@
+<resources>
+    <string name="scan_title">Scanner</string>
+    <string name="scan_choose">Open image</string>
+    <string name="scan_camera">Take picture</string>
+    <string name="scan_intro">Kinetic Vault only decrypts images made by Kinetic Vault. Open the original PNG; a photograph or compressed copy usually loses the hidden data.</string>
+    <string name="scan_idle">Choose an image to inspect its original pixels.</string>
+    <string name="scan_working">Reading original pixels…</string>
+    <string name="scan_found">Kinetic Vault signature found. Open Reveal to authenticate and unlock it with your gesture and passphrase.</string>
+    <string name="scan_absent">No Kinetic Vault data found</string>
+    <string name="scan_xray_note">X-ray amplifies the lowest bit of each colour channel. Patterns alone do not prove that an image contains hidden data.</string>
+    <string name="scan_reveal">Open in Reveal</string>
+    <string name="scan_error">Could not read this image unchanged. Choose an accessible, opaque original image within the device memory limit and try again.</string>
+    <string name="scan_camera_preparing">Preparing camera…</string>
+    <string name="scan_camera_cancelled">Picture cancelled. Open an image or take another picture.</string>
+    <string name="scan_camera_error">Camera unavailable. Use Open image to continue.</string>
+    <string name="learn_local">Offline explainer</string>
+    <string name="learn_remote">Read more online</string>
+    <string name="learn_remote_url" translatable="false">https://en.wikipedia.org/wiki/Steganography</string>
+    <string name="learn_web_description">Interactive explanation of hiding encrypted bits in image colours</string>
+    <string name="learn_error_title">Page unavailable</string>
+    <string name="learn_error_body">The page could not load. Check your connection and retry, or use the offline explainer above.</string>
+    <string name="learn_retry">Retry page</string>
+</resources>

@@ -38,13 +38,9 @@ public final class HomeActivity extends AppCompatActivity {
         findViewById(R.id.home_more).setOnClickListener(this::overflow);
         findViewById(R.id.cloud_retry).setOnClickListener(v ->
                 com.example.kineticvault.data.SyncManager.get(this).configurationChanged());
-        int[] upcoming = {R.id.home_scan};
-        for (int id : upcoming) {
-            View tile = findViewById(id);
-            ViewCompat.setStateDescription(tile, getString(R.string.home_coming_soon));
-            tile.setOnClickListener(v -> Snackbar.make(root, R.string.home_coming_soon, Snackbar.LENGTH_LONG).show());
-        }
-        int[] tiles = {R.id.home_hide, R.id.home_reveal, R.id.home_lab, R.id.home_scan, R.id.home_history, R.id.home_settings};
+        findViewById(R.id.home_scan).setOnClickListener(v -> startActivity(new Intent(this, ScannerActivity.class)));
+        findViewById(R.id.home_learn).setOnClickListener(v -> startActivity(new Intent(this, LearnActivity.class)));
+        int[] tiles = {R.id.home_hide, R.id.home_reveal, R.id.home_lab, R.id.home_scan, R.id.home_history, R.id.home_settings, R.id.home_learn};
         for (int i = 0; i < tiles.length; i++) {
             View tile = findViewById(tiles[i]); tile.setAlpha(0); tile.setTranslationY(32);
             tile.animate().alpha(1).translationY(0).setStartDelay(i * 75L).setDuration(350).start();
