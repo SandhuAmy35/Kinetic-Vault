@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 public final class HomeActivity extends AppCompatActivity {
     private android.animation.ValueAnimator pulse;
+    private final com.example.kineticvault.data.SyncManager.Listener ledger = this::showLedger;
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
         EdgeToEdge.enable(this);
@@ -35,6 +36,8 @@ public final class HomeActivity extends AppCompatActivity {
         findViewById(R.id.home_history).setOnClickListener(v -> startActivity(new Intent(this, VaultActivity.class)));
         findViewById(R.id.home_settings).setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
         findViewById(R.id.home_more).setOnClickListener(this::overflow);
+        findViewById(R.id.cloud_retry).setOnClickListener(v ->
+                com.example.kineticvault.data.SyncManager.get(this).configurationChanged());
         int[] upcoming = {R.id.home_scan};
         for (int id : upcoming) {
             View tile = findViewById(id);
@@ -57,6 +60,25 @@ public final class HomeActivity extends AppCompatActivity {
                     : item.getItemId() == 2 ? LearnActivity.class : AboutActivity.class;
             startActivity(new Intent(this, screen)); return true;
         }); menu.show();
+    }
+    private void showLedger(com.example.kineticvault.data.SyncManager.Status status) {
+        android.widget.TextView chip = findViewById(R.id.cloud_status);
+        chip.setText(status.offline ? R.string.cloud_offline : status.pending > 0
+                ? R.string.cloud_pending : R.string.cloud_synced);
+        android.widget.TextView counts = findViewById(R.id.cloud_stats);
+        counts.setText(status.statsAvailable ? getString(status.offline || status.pending > 0
+                ? R.string.cloud_stats_cached : R.string.cloud_stats_live, status.vaults, status.events, status.bytes)
+                : getString(R.string.cloud_stats_unavailable));
+        android.widget.TextView queue = findViewById(R.id.cloud_queue);
+        queue.setText(getString(R.string.cloud_queue, status.pending));
+        findViewById(R.id.cloud_airplane).setVisibility(status.airplane ? View.VISIBLE : View.GONE);
+        findViewById(R.id.cloud_retry).setEnabled(!status.airplane);
+    }
+    @Override protected void onStart() {
+        super.onStart(); com.example.kineticvault.data.SyncManager.get(this).addListener(ledger);
+    }
+    @Override protected void onStop() {
+        com.example.kineticvault.data.SyncManager.get(this).removeListener(ledger); super.onStop();
     }
     @Override protected void onResume() {
         super.onResume();

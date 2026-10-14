@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public final class VaultDatabaseHelper extends SQLiteOpenHelper {
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     public VaultDatabaseHelper(Context context) {
         super(context.getApplicationContext(), "kinetic_vault.db", null, VERSION);
@@ -30,6 +30,7 @@ public final class VaultDatabaseHelper extends SQLiteOpenHelper {
                 + "vault_uuid TEXT NOT NULL REFERENCES vaults(uuid), "
                 + "type TEXT NOT NULL CHECK(type IN ('HIDE','REVEAL_OK','REVEAL_FAIL','AUTOLOCK','EXPORT')), "
                 + "ts INTEGER NOT NULL)");
+        syncSchema(db);
         db.execSQL("CREATE INDEX IF NOT EXISTS vaults_created ON vaults(deleted, created_at)");
         db.execSQL("CREATE INDEX IF NOT EXISTS events_vault ON events(vault_uuid, ts)");
     }
@@ -42,6 +43,23 @@ public final class VaultDatabaseHelper extends SQLiteOpenHelper {
         addColumn(db, "deleted", "INTEGER NOT NULL DEFAULT 0 CHECK(deleted IN (0,1))");
         addColumn(db, "lat", "REAL"); addColumn(db, "lng", "REAL");
         onCreate(db);
+    }
+
+
+    private static void syncSchema(SQLiteDatabase db) {
+        addColumn(db, "sync_revision", "INTEGER NOT NULL DEFAULT 1");
+        addColumn(db, "sync_updated_at", "INTEGER NOT NULL DEFAULT 0");
+        db.execSQL("CREATE TABLE IF NOT EXISTS sync_events (event_id TEXT PRIMARY KEY, "
+                + "vault_uuid TEXT, type TEXT NOT NULL, ts INTEGER NOT NULL, sync_state INTEGER NOT NULL DEFAULT 0)");
+        db.execSQL("INSERT OR IGNORE INTO sync_events(event_id,vault_uuid,type,ts) "
+                + "SELECT 'vault-' || id,vault_uuid,type,ts FROM events");
+        db.execSQL("CREATE TRIGGER IF NOT EXISTS vault_sync_dirty AFTER UPDATE OF "
+                + "title,expires_at,deleted,payload_type,payload_bytes,capacity_bytes,ghost,uses_passphrase ON vaults "
+                + "BEGIN UPDATE vaults SET sync_state=0,sync_revision=sync_revision+1,"
+                + "sync_updated_at=CAST(strftime('%s','now') AS INTEGER)*1000 WHERE uuid=NEW.uuid; END");
+        db.execSQL("CREATE TRIGGER IF NOT EXISTS event_sync_queue AFTER INSERT ON events BEGIN "
+                + "INSERT OR IGNORE INTO sync_events(event_id,vault_uuid,type,ts) "
+                + "VALUES('vault-' || NEW.id,NEW.vault_uuid,NEW.type,NEW.ts); END");
     }
 
     private static void addColumn(SQLiteDatabase db, String name, String definition) {

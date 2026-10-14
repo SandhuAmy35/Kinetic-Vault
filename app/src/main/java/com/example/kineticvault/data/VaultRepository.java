@@ -11,8 +11,9 @@ import java.util.List;
 /** Synchronous API: callers must use their worker executor, including close(). */
 public final class VaultRepository implements AutoCloseable {
     private final VaultDatabaseHelper helper;
+    private final Context app;
 
-    public VaultRepository(Context context) { helper = new VaultDatabaseHelper(context); }
+    public VaultRepository(Context context) { app = context.getApplicationContext(); helper = new VaultDatabaseHelper(app); }
 
     public static void requireWorker() {
         if (Looper.myLooper() == Looper.getMainLooper())
@@ -21,7 +22,8 @@ public final class VaultRepository implements AutoCloseable {
 
     public long insert(VaultEntry entry) {
         requireWorker();
-        return helper.getWritableDatabase().insertOrThrow("vaults", null, values(entry));
+        long id = helper.getWritableDatabase().insertOrThrow("vaults", null, values(entry));
+        SyncManager.get(app).request(); return id;
     }
 
     public List<VaultEntry> search(String query, Long fromInclusive, Long toExclusive) {
@@ -81,11 +83,13 @@ public final class VaultRepository implements AutoCloseable {
             db.insertOrThrow("events", null, values);
             db.setTransactionSuccessful();
         } finally { db.endTransaction(); }
+        SyncManager.get(app).request();
     }
 
     private void update(String uuid, ContentValues values) {
         if (helper.getWritableDatabase().update("vaults", values, "uuid = ? AND deleted = ?",
                 new String[]{uuid, "0"}) != 1) throw new IllegalStateException("Vault unavailable");
+        SyncManager.get(app).request();
     }
 
     private static ContentValues dirty() {

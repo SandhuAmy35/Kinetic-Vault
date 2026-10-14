@@ -36,3 +36,12 @@ HistoryCsv: static void export(Context,Uri) throws IOException; event ledger id/
 Constants: static float tiltEnterDegrees(int), tiltExitDegrees(int); GestureRecognizer: void setSensitivity(int). Relaxed 20/10, Normal 25/12, Strict 30/14; cryptography and format unchanged.
 Splash launcher draws logo then Home after ~1.2s and preferences load; Home stagger/pulsing orb/Settings-Learn-About overflow. Settings server URL/API key saved privately, Test Connection disabled until 3C; disguise/location disabled off.
 Assumptions: Team uses workstream roles pending names; auto-lock controls Reveal background/screen-off clearing, while recording credentials still clear on pause and destruction always wipes.
+
+3C implemented: server + metadata sync; STOPPED after 3C, await next explicit START.
+3C new: server/{schema.sql,api.php,config.sample.php,README_XAMPP.md,.htaccess,.gitignore}; data/{SyncManager,SyncClient,SyncStore}.java; values/sync_strings.xml; debug/res/xml/network_security_config.xml.
+SyncManager: static SyncManager get(Context); void start(), stop(), request(), configurationChanged(), addListener(Listener), removeListener(Listener), testConnection(String,String,Consumer<Boolean>); Listener.onSync(Status); Status public offline/airplane/statsAvailable/pending/vaults/events/bytes.
+SQLite v2 adds sync_revision/sync_updated_at and sync_events outbox; triggers queue edits/events; conditional revision acknowledgements; sync_state 0=pending, 1=synced, 2=failed; persisted 5s–5min exponential retry; batches of 50.
+Server: PHP 8/PDO prepared statements; POST JSON/X-API-KEY actions health/upsert_vault/list_vaults/delete_vault/log_event/stats; device-scoped metadata, tombstones and idempotent events.
+Home ledger strip/status/retry/airplane banner; Settings Test Connection live; repository mutation hooks; foreground Application lifecycle starts/stops sync and unregisters airplane receiver; INTERNET permission.
+Privacy: explicit metadata allowlist; random installation UUID; no titles, filenames, images, locations or encryption credentials uploaded; local vault flows remain independent of server.
+Assumptions: foreground-only sync; debug HTTP exact hosts 10.0.2.2/localhost/127.0.0.1/sample 192.168.1.100 (replace with PC LAN IP); release HTTPS only; metadata ledger is not image backup.

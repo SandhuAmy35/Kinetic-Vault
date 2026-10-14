@@ -9,7 +9,7 @@
     <string name="settings_url">Server URL</string>
     <string name="settings_key">Server API key</string>
     <string name="settings_test">Test Connection</string>
-    <string name="settings_server_note">Connection testing becomes available in step 3C. The URL and API key are stored privately on this device. No connection is made in this step.</string>
+    <string name="settings_server_note">Enter the full api.php URL and your API key. Test Connection uses the entered values; Save settings enables metadata sync. Your encrypted PNGs and secrets stay on this device.</string>
     <string name="settings_disguise">Disguise mode (coming soon)</string>
     <string name="settings_location">Location tags (coming soon)</string>
     <string name="settings_placeholder">Disguise and location tags are off and reserved for a later step. No location is collected.</string>

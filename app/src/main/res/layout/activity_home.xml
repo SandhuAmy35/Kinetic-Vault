@@ -15,6 +15,31 @@
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/space_lg" android:text="@string/tagline"
             android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="@dimen/space_lg"
+            android:layout_marginBottom="@dimen/space_lg" android:background="@drawable/bg_glow_card_cyan">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/cloud_title" android:textAppearance="@style/TextAppearance.KineticVault.Kicker" />
+            <com.google.android.material.chip.Chip android:id="@+id/cloud_status"
+                android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="48dp"
+                android:text="@string/cloud_offline" android:clickable="false" android:checkable="false"
+                android:accessibilityLiveRegion="polite" />
+            <TextView android:id="@+id/cloud_airplane" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:padding="12dp" android:visibility="gone"
+                android:text="@string/cloud_airplane" android:textAppearance="@style/TextAppearance.KineticVault.Body"
+                android:accessibilityLiveRegion="polite" />
+            <TextView android:id="@+id/cloud_stats" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="@string/cloud_stats_unavailable"
+                android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+            <TextView android:id="@+id/cloud_queue" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/cloud_retry"
+                style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/cloud_retry" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/cloud_recovery" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        </LinearLayout>
         <com.google.android.material.button.MaterialButton android:id="@+id/home_hide"
             android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="80dp"
             android:text="@string/home_hide" app:icon="@drawable/ic_lock" app:iconGravity="textStart" />
