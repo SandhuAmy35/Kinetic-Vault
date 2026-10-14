@@ -18,4 +18,5 @@
     <dimen name="type_small">14sp</dimen>
     <dimen name="type_title">28sp</dimen>
     <dimen name="type_result">48sp</dimen>
+    <dimen name="gesture_pad_width">280dp</dimen>
 </resources>

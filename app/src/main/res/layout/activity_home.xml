@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_root" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true" android:background="@color/kv_background">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:paddingVertical="@dimen/space_lg">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/home_eyebrow" android:textAppearance="@style/TextAppearance.KineticVault.Kicker" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_md" android:text="@string/app_name"
+            android:textAppearance="@style/TextAppearance.KineticVault.Title" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_lg" android:text="@string/tagline"
+            android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/home_hide"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="80dp"
+            android:text="@string/home_hide" app:icon="@drawable/ic_lock" app:iconGravity="textStart" />
+        <FrameLayout android:id="@+id/home_reveal" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:minHeight="80dp" android:layout_marginVertical="@dimen/space_sm"
+            android:background="@drawable/bg_glow_card_violet" android:clickable="true" android:focusable="true"
+            android:contentDescription="@string/home_reveal">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center"
+                android:padding="@dimen/space_lg" android:text="@string/home_reveal" android:enabled="false"
+                android:alpha="0.6" android:importantForAccessibility="no"
+                android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        </FrameLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/home_lab"
+            style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="80dp" android:text="@string/home_lab"
+            app:icon="@drawable/ic_shield" app:iconGravity="textStart" />
+        <FrameLayout android:id="@+id/home_scan" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:minHeight="80dp" android:layout_marginVertical="@dimen/space_sm"
+            android:background="@drawable/bg_glow_card_violet" android:clickable="true" android:focusable="true"
+            android:contentDescription="@string/home_scan">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center"
+                android:padding="@dimen/space_lg" android:text="@string/home_scan" android:enabled="false"
+                android:alpha="0.6" android:importantForAccessibility="no"
+                android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        </FrameLayout>
+        <FrameLayout android:id="@+id/home_history" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:minHeight="80dp" android:layout_marginVertical="@dimen/space_sm"
+            android:background="@drawable/bg_glow_card_violet" android:clickable="true" android:focusable="true"
+            android:contentDescription="@string/home_history">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center"
+                android:padding="@dimen/space_lg" android:text="@string/home_history" android:enabled="false"
+                android:alpha="0.6" android:importantForAccessibility="no"
+                android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        </FrameLayout>
+        <FrameLayout android:id="@+id/home_settings" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:minHeight="80dp" android:layout_marginVertical="@dimen/space_sm"
+            android:background="@drawable/bg_glow_card_violet" android:clickable="true" android:focusable="true"
+            android:contentDescription="@string/home_settings">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center"
+                android:padding="@dimen/space_lg" android:text="@string/home_settings" android:enabled="false"
+                android:alpha="0.6" android:importantForAccessibility="no"
+                android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+        </FrameLayout>
+    </LinearLayout>
+</ScrollView>

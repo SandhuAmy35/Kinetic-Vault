@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="gesture_pad_left" type="id" />
+    <item name="gesture_pad_right" type="id" />
+    <item name="gesture_pad_forward" type="id" />
+    <item name="gesture_pad_back" type="id" />
+    <item name="gesture_pad_snap" type="id" />
+    <item name="gesture_pad_flat" type="id" />
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/hide_cover_intro" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    <ImageView android:id="@+id/hide_cover_preview" android:layout_width="match_parent" android:layout_height="220dp"
+        android:layout_marginVertical="@dimen/space_md" android:background="@drawable/bg_glow_card_cyan"
+        android:scaleType="fitCenter" android:contentDescription="@string/hide_cover_description" />
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/hide_cover_loading" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:indeterminate="true" android:visibility="gone" />
+    <TextView android:id="@+id/hide_cover_info" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/hide_cover_empty" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/hide_gallery"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hide_gallery" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/hide_camera"
+        style="@style/Widget.Material3.Button.OutlinedButton" android:minHeight="@dimen/touch_min"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hide_camera" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/hide_generate"
+        style="@style/Widget.Material3.Button.OutlinedButton" android:minHeight="@dimen/touch_min"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hide_generate" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/hide_cover_next"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/space_md"
+        android:text="@string/hide_next_secret" android:enabled="false" />
+</LinearLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/hide_result_title" android:textAppearance="@style/TextAppearance.KineticVault.Title" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/hide_comparison_labels" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    <com.example.kineticvault.ui.WipeComparisonView android:id="@+id/hide_comparison"
+        android:layout_width="match_parent" android:layout_height="240dp" android:background="@drawable/bg_glow_card_cyan" />
+    <SeekBar android:id="@+id/hide_wipe" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:minHeight="@dimen/touch_min" android:max="100" android:progress="50"
+        android:contentDescription="@string/hide_wipe_description" />
+    <TextView android:id="@+id/hide_statistics" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/space_md" android:text="@string/hide_result_note"
+        android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/hide_save"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hide_save_png" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/hide_share"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hide_share_file" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/hide_finish"
+        style="@style/Widget.Material3.Button.TextButton" android:minHeight="@dimen/touch_min"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hide_return_home" />
+</LinearLayout>

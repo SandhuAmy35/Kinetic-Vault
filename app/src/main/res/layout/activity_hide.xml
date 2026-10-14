@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hide_root" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@color/kv_background"
+    android:importantForAutofill="noExcludeDescendants">
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/hide_back" style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:minHeight="@dimen/touch_min" android:text="@string/icon_back" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/hide_title" android:textAppearance="@style/TextAppearance.KineticVault.Title" />
+    <TextView android:id="@+id/hide_step_title" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_sm" android:textAppearance="@style/TextAppearance.KineticVault.Kicker"
+        android:accessibilityLiveRegion="polite" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/hide_stepper" android:textAppearance="@style/TextAppearance.KineticVault.Body"
+        android:textSize="@dimen/type_small" android:layout_marginVertical="@dimen/space_sm" />
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/hide_step_progress" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:max="100" android:importantForAccessibility="no" />
+    <TextView android:id="@+id/hide_notice" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:padding="@dimen/space_sm" android:textColor="@color/kv_magenta"
+        android:visibility="gone" android:accessibilityLiveRegion="polite" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+        android:fillViewport="true" android:clipToPadding="false" android:paddingVertical="@dimen/space_md">
+        <ViewFlipper android:id="@+id/hide_steps" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:saveEnabled="false">
+            <include layout="@layout/hide_step_cover" />
+            <include layout="@layout/hide_step_secret" />
+            <include layout="@layout/hide_step_gesture" />
+            <include layout="@layout/hide_step_forge" />
+            <include layout="@layout/hide_step_result" />
+        </ViewFlipper>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/hide_forge_intro" android:textAppearance="@style/TextAppearance.KineticVault.Body" />
+    <com.example.kineticvault.ui.MatrixRainView android:id="@+id/hide_matrix"
+        android:layout_width="match_parent" android:layout_height="300dp" android:background="@drawable/bg_glow_card_cyan" />
+    <TextView android:id="@+id/hide_forge_status" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/hide_forging" android:textAppearance="@style/TextAppearance.KineticVault.Body"
+        android:accessibilityLiveRegion="polite" />
+    <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/hide_forge_progress"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:max="1000"
+        android:layout_marginVertical="@dimen/space_md" android:indeterminate="true" android:importantForAccessibility="no" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/hide_cancel_forge"
+        style="@style/Widget.Material3.Button.OutlinedButton" android:minHeight="@dimen/touch_min"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hide_cancel_forge" />
+</LinearLayout>
