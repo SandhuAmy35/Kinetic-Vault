@@ -46,6 +46,22 @@ public final class VaultActivity extends AppCompatActivity {
     private VaultEntry selected;
     private int generation;
     private boolean closed;
+    private final androidx.activity.result.ActivityResultLauncher<String> csv = registerForActivityResult(
+            new androidx.activity.result.contract.ActivityResultContracts.CreateDocument("text/csv"), uri -> {
+                if (uri == null) return;
+                findViewById(R.id.vault_export).setEnabled(false);
+                worker.execute(() -> {
+                    boolean saved;
+                    try { com.example.kineticvault.data.HistoryCsv.export(this, uri); saved = true; }
+                    catch (Exception error) { saved = false; }
+                    final boolean result = saved;
+                    main.post(() -> { if (!closed) {
+                        findViewById(R.id.vault_export).setEnabled(true);
+                        Snackbar.make(root, result ? R.string.history_saved : R.string.history_error, Snackbar.LENGTH_LONG).show();
+                    } });
+                });
+            });
+
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state); EdgeToEdge.enable(this); setContentView(R.layout.activity_vault);
@@ -56,6 +72,10 @@ public final class VaultActivity extends AppCompatActivity {
             query.setText(state.getString("query", ""));
         }
         insets(); bindList(); bindFilters(); rangeLabel();
+        findViewById(R.id.vault_export).setOnClickListener(v -> {
+            try { csv.launch(getString(R.string.history_name)); }
+            catch (RuntimeException error) { failure(R.string.history_error); }
+        });
     }
 
     private void insets() {

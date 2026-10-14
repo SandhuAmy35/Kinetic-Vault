@@ -43,6 +43,8 @@ final class GestureStep {
             }
         });
         bind();
+        usePad.setChecked(com.example.kineticvault.data.VaultPreferences.current().pad);
+        pad.setVisibility(usePad.isChecked() ? View.VISIBLE : View.GONE);
     }
 
     private void bind() {

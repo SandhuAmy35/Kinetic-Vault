@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="settings_motion">Gesture sensitivity</string>
+    <string name="settings_pad">Use Gesture Pad by default</string>
+    <string name="settings_protection">Protect secret screens from screenshots</string>
+    <string name="settings_autolock">Auto-lock when leaving Reveal or turning the screen off</string>
+    <string name="settings_lock_note">Auto-lock clears revealed content when enabled. Active credentials are always cleared when recording stops. Closing Reveal always clears its secrets.</string>
+    <string name="settings_url">Server URL</string>
+    <string name="settings_key">Server API key</string>
+    <string name="settings_test">Test Connection</string>
+    <string name="settings_server_note">Connection testing becomes available in step 3C. The URL and API key are stored privately on this device. No connection is made in this step.</string>
+    <string name="settings_disguise">Disguise mode (coming soon)</string>
+    <string name="settings_location">Location tags (coming soon)</string>
+    <string name="settings_placeholder">Disguise and location tags are off and reserved for a later step. No location is collected.</string>
+    <string name="settings_save">Save settings</string>
+    <string name="settings_saved">Settings saved</string>
+    <string name="settings_save_error">Could not save settings. Tap Save settings to retry.</string>
+    <string name="settings_url_error">Enter an HTTP or HTTPS URL with a host, or leave it empty.</string>
+    <string name="about_title">About Kinetic Vault</string>
+    <string name="about_body">Hide encrypted text and files inside PNG images, then unlock them with a repeatable motion gesture and an optional passphrase.</string>
+    <string name="about_team">Team</string>
+    <string name="about_team_a">Workstream A · Sensors, gesture recognition and cryptography</string>
+    <string name="about_team_b">Workstream B · Steganography, image handling and visuals</string>
+    <string name="about_team_c">Workstream C · Interface, database, server and documentation</string>
+    <string name="learn_title">Learn</string>
+    <string name="learn_steps">Choose or generate a cover, add text or a file, then perform the same 4–8 move gesture twice. Reveal uses the original PNG and the same gesture and passphrase.</string>
+    <string name="learn_security">Human gestures can be easy to guess. Add a strong passphrase for meaningful protection against offline guessing. The public vault signature makes vaults detectable.</string>
+    <string name="learn_sharing">Always keep the PNG original. Send it as a Document/File; image compression or editing can destroy the hidden data.</string>
+    <string name="home_more">More options</string>
+    <string name="home_hero">Kinetic Vault orb</string>
+    <string name="history_export">Export history (.csv)</string>
+    <string name="history_saved">History exported</string>
+    <string name="history_error">Could not export history. Choose a destination again to retry.</string>
+    <string name="history_name">kinetic-vault-history.csv</string>
+    <string name="txt_import">Import text (.txt)</string>
+    <string name="txt_import_error">Could not import UTF-8 text. Choose a smaller .txt file and try again.</string>
+    <string name="txt_export">Save text (.txt)</string>
+    <string name="txt_name">revealed-text.txt</string>
+    <string name="splash_description">Kinetic Vault logo drawing</string>
+    <string name="history_csv_header">event_id,vault_uuid,event,timestamp_ms</string>
+    <string-array name="sensitivity_options"><item>Relaxed</item><item>Normal</item><item>Strict</item></string-array>
+</resources>

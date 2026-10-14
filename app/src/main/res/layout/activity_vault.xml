@@ -27,6 +27,7 @@
             android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/vault_clear_filters"
             android:visibility="gone" />
     </LinearLayout>
+    <com.google.android.material.button.MaterialButton android:id="@+id/vault_export" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/history_export"  />
     <TextView android:id="@+id/vault_range" android:layout_width="match_parent" android:layout_height="wrap_content"
         android:text="@string/vault_all_dates" android:textAppearance="@style/TextAppearance.KineticVault.Body"
         android:accessibilityLiveRegion="polite" android:layout_marginBottom="@dimen/space_sm" />

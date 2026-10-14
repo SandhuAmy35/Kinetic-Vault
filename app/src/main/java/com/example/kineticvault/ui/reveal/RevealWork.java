@@ -130,6 +130,7 @@ final class RevealWork {
     }
 
     synchronized char[] takeText() { char[] result = text; text = null; return result; }
+    synchronized boolean hasPayload() { return payload != null; }
     synchronized boolean hasFile() { return payload != null && payload.type == PayloadCodec.FILE; }
 
     void prepareExport(Callback<RevealExport> callback) {
@@ -142,8 +143,8 @@ final class RevealWork {
                 String name;
                 synchronized (this) {
                     requireCurrent(ticket);
-                    if (!hasFile()) throw new IOException();
-                    bytes = payload.data.clone(); name = payload.filename;
+                    if (!hasPayload()) throw new IOException();
+                    bytes = payload.data.clone(); name = hasFile() ? payload.filename : context.getString(R.string.txt_name);
                 }
                 pending = RevealExport.create(context, bytes, name, ledger.current());
                 RevealExport result = pending;

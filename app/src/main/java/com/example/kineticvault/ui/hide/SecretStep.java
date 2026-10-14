@@ -28,6 +28,8 @@ final class SecretStep {
     private final TextView capacity;
     private final LinearProgressIndicator meter;
     private final ActivityResultLauncher<String[]> picker;
+    private final TextImport importer;
+    private final ActivityResultLauncher<String[]> textPicker;
     private Uri file;
     private int version;
     private boolean active, busy, fits;
@@ -50,6 +52,17 @@ final class SecretStep {
                 ((TextView) host.findViewById(R.id.hide_file_status)).setText(R.string.hide_file_selected);
                 schedule();
             }
+        });
+        importer = new TextImport(host);
+        textPicker = host.registerForActivityResult(new ActivityResultContracts.OpenDocument(), uri -> {
+            if (uri != null) importer.read(uri, value -> {
+                type.check(R.id.hide_type_text);
+                text.setText(value, 0, value.length); schedule();
+            });
+        });
+        host.findViewById(R.id.hide_import_text).setOnClickListener(v -> {
+            try { textPicker.launch(new String[]{"text/plain"}); }
+            catch (RuntimeException error) { host.message(R.string.hide_picker_error); }
         });
         bind();
     }
@@ -168,7 +181,8 @@ final class SecretStep {
         return result;
     }
 
-    void clearSensitiveUi() { text.setText(""); passphrase.setText(""); }
+    void close() { importer.close(); }
+    void clearSensitiveUi() { importer.cancel(); text.setText(""); passphrase.setText(""); }
 
     private static char[] copy(EditText view) {
         char[] result = new char[view.length()];
@@ -179,7 +193,7 @@ final class SecretStep {
     private void setBusy(boolean value) {
         busy = value;
         int[] ids = {R.id.hide_secret_text, R.id.hide_passphrase, R.id.hide_type_text,
-                R.id.hide_type_file, R.id.hide_choose_file, R.id.hide_compress,
+                R.id.hide_type_file, R.id.hide_choose_file, R.id.hide_import_text, R.id.hide_compress,
                 R.id.hide_ghost, R.id.hide_use_passphrase};
         for (int id : ids) host.findViewById(id).setEnabled(!value);
         host.findViewById(R.id.hide_secret_next).setEnabled(!value && fits);

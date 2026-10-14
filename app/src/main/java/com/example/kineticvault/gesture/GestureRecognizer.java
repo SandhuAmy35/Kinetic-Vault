@@ -14,6 +14,13 @@ public final class GestureRecognizer {
 
     private final Executor callbackExecutor;
     private final Listener listener;
+    private float enterDegrees = Constants.TILT_ENTER_DEGREES;
+    private float exitDegrees = Constants.TILT_EXIT_DEGREES;
+    public void setSensitivity(int sensitivity) {
+        enterDegrees = Constants.tiltEnterDegrees(sensitivity);
+        exitDegrees = Constants.tiltExitDegrees(sensitivity);
+        reset();
+    }
     private volatile long generation;
     private long lastSample = -1;
     private long lastMove = -1;
@@ -56,8 +63,8 @@ public final class GestureRecognizer {
     }
 
     private byte recognize(long time, float pitch, float roll, float az, boolean still) {
-        boolean neutral = Math.abs(pitch) <= Constants.TILT_EXIT_DEGREES
-                && Math.abs(roll) <= Constants.TILT_EXIT_DEGREES;
+        boolean neutral = Math.abs(pitch) <= exitDegrees
+                && Math.abs(roll) <= exitDegrees;
         if (neutral) tiltLatched = false;
         boolean snap = detectSnap(time, pitch, roll, az);
         boolean flat = detectFlat(time, pitch, roll, still);
@@ -65,7 +72,7 @@ public final class GestureRecognizer {
         byte token = -1;
         if (snap) token = Constants.SNAP;
         else if (!tiltLatched && Math.max(Math.abs(pitch), Math.abs(roll))
-                >= Constants.TILT_ENTER_DEGREES) {
+                >= enterDegrees) {
             token = Math.abs(roll) >= Math.abs(pitch)
                     ? (roll > 0 ? Constants.RIGHT : Constants.LEFT)
                     : (pitch > 0 ? Constants.BACK : Constants.FORWARD);

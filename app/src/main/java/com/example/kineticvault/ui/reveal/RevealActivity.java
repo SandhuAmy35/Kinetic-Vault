@@ -42,7 +42,9 @@ public final class RevealActivity extends AppCompatActivity {
     private final BroadcastReceiver screenOff = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
-                lock(); work.discardExport(); finish();
+                if (com.example.kineticvault.data.VaultPreferences.current().autoLock) {
+                    lock(); work.discardExport(); finish();
+                }
             }
         }
     };
@@ -56,6 +58,15 @@ public final class RevealActivity extends AppCompatActivity {
                     public void success(Boolean logged) {
                         message(logged ? R.string.reveal_saved : R.string.vault_saved_event_error);
                     }
+                    public void failure(int message) { RevealActivity.this.message(message); }
+                });
+            });
+    private final ActivityResultLauncher<String> textSaver = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument("text/plain"), uri -> {
+                external = false;
+                if (uri == null) { work.discardExport(); return; }
+                work.save(uri, new RevealWork.Callback<Boolean>() {
+                    public void success(Boolean logged) { message(logged ? R.string.reveal_saved : R.string.vault_saved_event_error); }
                     public void failure(int message) { RevealActivity.this.message(message); }
                 });
             });
@@ -145,8 +156,10 @@ public final class RevealActivity extends AppCompatActivity {
         message(R.string.reveal_success);
         door.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         door.open(() -> {
-            if (work.hasFile()) findViewById(R.id.reveal_files).setVisibility(View.VISIBLE);
-            else {
+            findViewById(R.id.reveal_files).setVisibility(View.VISIBLE);
+            findViewById(R.id.reveal_open).setVisibility(work.hasFile() ? View.VISIBLE : View.GONE);
+            ((TextView) findViewById(R.id.reveal_save)).setText(work.hasFile() ? R.string.reveal_save : R.string.txt_export);
+            if (!work.hasFile()) {
                 char[] text = work.takeText();
                 if (text != null) {
                     findViewById(R.id.reveal_text).setVisibility(View.VISIBLE);
@@ -177,14 +190,17 @@ public final class RevealActivity extends AppCompatActivity {
     }
 
     private void export(boolean open) {
-        if (busy || !work.hasFile()) return;
+        if (busy || !work.hasPayload()) return;
         setBusy(true); message(R.string.reveal_exporting);
         work.prepareExport(new RevealWork.Callback<RevealExport>() {
             public void success(RevealExport value) {
                 setBusy(false);
                 try {
                     external = true;
-                    if (!open) saver.launch(value.name);
+                    if (!open) {
+                        if ("text/plain".equals(value.mime)) textSaver.launch(value.name);
+                        else saver.launch(value.name);
+                    }
                     else {
                         Intent intent = new Intent(Intent.ACTION_VIEW).setDataAndType(value.uri, value.mime)
                                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -247,9 +263,9 @@ public final class RevealActivity extends AppCompatActivity {
     }
 
     @Override protected void onStop() {
-        lock();
+        if (com.example.kineticvault.data.VaultPreferences.current().autoLock) lock();
         android.os.PowerManager power = getSystemService(android.os.PowerManager.class);
-        if (power != null && !power.isInteractive()) { work.discardExport(); finish(); }
+        if (com.example.kineticvault.data.VaultPreferences.current().autoLock && power != null && !power.isInteractive()) { work.discardExport(); finish(); }
         if (registered) { unregisterReceiver(screenOff); registered = false; }
         super.onStop();
     }

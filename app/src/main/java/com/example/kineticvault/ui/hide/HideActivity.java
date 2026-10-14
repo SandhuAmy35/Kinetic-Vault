@@ -32,7 +32,8 @@ public final class HideActivity extends AppCompatActivity {
 
     @Override protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        if (com.example.kineticvault.data.VaultPreferences.current().protection)
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_hide);
         installInsets();
@@ -150,6 +151,9 @@ public final class HideActivity extends AppCompatActivity {
     @Override protected void onResume() {
         super.onResume();
         resumed = true;
+        if (com.example.kineticvault.data.VaultPreferences.current().protection)
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         if (secret != null && step == 1) secret.activate();
     }
 
@@ -173,7 +177,7 @@ public final class HideActivity extends AppCompatActivity {
     }
 
     @Override protected void onDestroy() {
-        if (secret != null) secret.deactivate();
+        if (secret != null) { secret.deactivate(); secret.close(); }
         if (work != null) work.close();
         super.onDestroy();
     }

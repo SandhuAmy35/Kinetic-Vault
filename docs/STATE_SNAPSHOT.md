@@ -28,3 +28,11 @@ VaultLogger: static VaultEntry capture(Context,Uri,Bitmap,boolean,boolean); void
 3A storage decisions: SHA-256 identifies original encrypted PNG copies under private UUID paths; 96px encrypted thumbnails; generic default titles; no keys, gestures, salts, IVs, secret filenames or plaintext in SQLite. Imported payload_type=0/bytes=0 until successful unlock; lat/lng stay null; sync_state 0=pending, 1=synced, 2=failed, no network in 3A.
 3A UI: ListView/custom thumbnail adapter with worker decoding; search/debounced refresh, creation-date pickers, rename dialog, expiry date/time pickers, soft-delete confirmation, empty/error recovery states, haptics/insets, tap opens original PNG in Reveal. Export failures distinguish a saved file from an unsaved event.
 Assumption: expiry marks local metadata only; it does not change the encrypted PNG or enforce destruction. Soft delete hides the entry while retaining its encrypted copy and event history.
+
+3B implemented: Settings + exports + Splash; STOPPED after 3B, await explicit START 3C.
+3B new: data/{VaultPreferences,HistoryCsv}.java; ui/{InfoActivity,SettingsActivity,AboutActivity,LearnActivity,SplashActivity,SplashLogoView}.java; ui/hide/TextImport.java; layout/activity_{settings,about,learn}.xml; values/settings_strings.xml.
+VaultPreferences: static Values current(); void load(Context,Runnable), save(Context,Values,Consumer<Boolean>); Values(int,boolean,boolean,boolean,String,String). Worker preferences; defaults Normal/pad off/protection on/auto-lock on.
+HistoryCsv: static void export(Context,Uri) throws IOException; event ledger id/UUID/type/epoch-ms through CreateDocument. Hide imports bounded strict UTF-8 .txt via OpenDocument; Reveal saves text via text/plain CreateDocument.
+Constants: static float tiltEnterDegrees(int), tiltExitDegrees(int); GestureRecognizer: void setSensitivity(int). Relaxed 20/10, Normal 25/12, Strict 30/14; cryptography and format unchanged.
+Splash launcher draws logo then Home after ~1.2s and preferences load; Home stagger/pulsing orb/Settings-Learn-About overflow. Settings server URL/API key saved privately, Test Connection disabled until 3C; disguise/location disabled off.
+Assumptions: Team uses workstream roles pending names; auto-lock controls Reveal background/screen-off clearing, while recording credentials still clear on pause and destruction always wipes.

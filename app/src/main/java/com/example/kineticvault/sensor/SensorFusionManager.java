@@ -44,6 +44,7 @@ public final class SensorFusionManager implements SensorEventListener {
     public Mode start() {
         requireMainThread();
         stop();
+        recognizer.setSensitivity(com.example.kineticvault.data.VaultPreferences.current().sensitivity);
         if (sensors == null) return mode;
         Sensor accelerometer = sensors.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (accelerometer == null || !sensors.registerListener(this, accelerometer,

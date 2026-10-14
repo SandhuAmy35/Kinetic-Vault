@@ -38,6 +38,8 @@ final class RevealGesture {
         host.findViewById(R.id.reveal_done).setOnClickListener(v -> { if (session != null) session.done(); });
         clear();
     }
+        usePad.setChecked(com.example.kineticvault.data.VaultPreferences.current().pad);
+        pad.setVisibility(usePad.isChecked() ? View.VISIBLE : View.GONE);
 
     private void begin() {
         clear();

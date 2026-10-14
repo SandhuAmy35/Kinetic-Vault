@@ -40,6 +40,13 @@ public final class Constants {
     // Lower entry angles make tilts easier. Exit must stay below entry.
     public static final float TILT_ENTER_DEGREES = 25f;
     public static final float TILT_EXIT_DEGREES = 12f;
+    // Sensitivity changes recognition only; token IDs and cryptographic format stay fixed.
+    public static float tiltEnterDegrees(int sensitivity) {
+        return sensitivity == 0 ? 20f : sensitivity == 2 ? 30f : TILT_ENTER_DEGREES;
+    }
+    public static float tiltExitDegrees(int sensitivity) {
+        return sensitivity == 0 ? 10f : sensitivity == 2 ? 14f : TILT_EXIT_DEGREES;
+    }
     // Increase the angle for a more forgiving face-up hold.
     public static final float FLAT_DEGREES = 8f;
     // Increase the gap to reject rapid accidental repeats.
