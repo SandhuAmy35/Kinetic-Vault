@@ -6,7 +6,8 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/hide_back" style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:minHeight="@dimen/touch_min" android:text="@string/icon_back" />
+        android:minHeight="@dimen/touch_min" android:text="@string/icon_back"
+        android:contentDescription="@string/audit_back" />
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
         android:text="@string/hide_title" android:textAppearance="@style/TextAppearance.KineticVault.Title" />
     <TextView android:id="@+id/hide_step_title" android:layout_width="match_parent" android:layout_height="wrap_content"

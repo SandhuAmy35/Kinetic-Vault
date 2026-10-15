@@ -38,6 +38,7 @@ public final class RevealActivity extends AppCompatActivity {
     private TextScrambler scrambler;
     private EditText password;
     private VaultHeader header;
+    private Uri selected;
     private boolean busy, registered, revealed, external;
     private int attempts;
     private final BroadcastReceiver screenOff = new BroadcastReceiver() {
@@ -54,7 +55,7 @@ public final class RevealActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String> saver = registerForActivityResult(
             new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
                 external = false;
-                if (uri == null) { work.discardExport(); return; }
+                if (uri == null) { cancelledExport(); return; }
                 work.save(uri, new RevealWork.Callback<Boolean>() {
                     public void success(Boolean logged) {
                         message(logged ? R.string.reveal_saved : R.string.vault_saved_event_error);
@@ -65,7 +66,7 @@ public final class RevealActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String> textSaver = registerForActivityResult(
             new ActivityResultContracts.CreateDocument("text/plain"), uri -> {
                 external = false;
-                if (uri == null) { work.discardExport(); return; }
+                if (uri == null) { cancelledExport(); return; }
                 work.save(uri, new RevealWork.Callback<Boolean>() {
                     public void success(Boolean logged) { message(logged ? R.string.reveal_saved : R.string.vault_saved_event_error); }
                     public void failure(int message) { RevealActivity.this.message(message); }
@@ -80,17 +81,19 @@ public final class RevealActivity extends AppCompatActivity {
         super.onCreate(state);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         EdgeToEdge.enable(this); setContentView(R.layout.activity_reveal);
+        findViewById(R.id.reveal_root).setSaveFromParentEnabled(false);
         work = new RevealWork(getApplicationContext());
         password = findViewById(R.id.reveal_passphrase);
         door = findViewById(R.id.reveal_door);
         scrambler = new TextScrambler(findViewById(R.id.reveal_text));
         gesture = new RevealGesture(this);
         installInsets(); bind();
-        Uri uri = getIntent().getData();
+        Uri uri = state != null && state.getString("source") != null
+                ? Uri.parse(state.getString("source")) : getIntent().getData();
         if (uri == null) uri = IntentCompat.getParcelableExtra(getIntent(), Intent.EXTRA_STREAM, Uri.class);
         if (uri == null && getIntent().getClipData() != null && getIntent().getClipData().getItemCount() > 0)
             uri = getIntent().getClipData().getItemAt(0).getUri();
-        if (uri != null && state == null) load(uri);
+        if (uri != null) load(uri);
     }
 
     private void bind() {
@@ -121,6 +124,7 @@ public final class RevealActivity extends AppCompatActivity {
     }
 
     private void load(Uri uri) {
+        selected = uri;
         lock(); header = null; attempts = 0;
         ((TextView) findViewById(R.id.reveal_attempts)).setText(getString(R.string.reveal_attempts, attempts));
         setBusy(true); message(R.string.reveal_reading);
@@ -200,6 +204,10 @@ public final class RevealActivity extends AppCompatActivity {
         Runnable[] actions = work.hasFile() ? new Runnable[]{() -> export(false),
                 () -> findViewById(R.id.reveal_open).performClick()} : new Runnable[]{() -> export(false)};
         sheet = com.example.kineticvault.ui.ExportSheet.show(this, R.string.reveal_file_note, labels, actions);
+    }
+    private void cancelledExport() {
+        work.discardExport();
+        message(R.string.audit_export_cancelled);
     }
     private void export(boolean open) {
         if (busy || !work.hasPayload()) return;
@@ -285,5 +293,13 @@ public final class RevealActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    @Override protected void onDestroy() { work.close(); super.onDestroy(); }
+    @Override protected void onSaveInstanceState(Bundle state) {
+        if (selected != null) state.putString("source", selected.toString());
+        super.onSaveInstanceState(state);
+    }
+
+    @Override protected void onDestroy() {
+        gesture.clear(); password.getText().clear(); scrambler.clear(); door.reset();
+        work.close(); super.onDestroy();
+    }
 }

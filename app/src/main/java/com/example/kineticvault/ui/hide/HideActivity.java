@@ -23,6 +23,7 @@ public final class HideActivity extends AppCompatActivity {
     private static final int[] TITLES = {R.string.hide_step_cover, R.string.hide_step_secret,
             R.string.hide_step_gesture, R.string.hide_step_forge, R.string.hide_step_result};
     private HideWork work;
+    private CoverStep cover;
     private SecretStep secret;
     private GestureStep gesture;
     private ResultStep result;
@@ -37,9 +38,11 @@ public final class HideActivity extends AppCompatActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_hide);
+        // This flow restarts after recreation; child controls must restart with its model.
+        findViewById(R.id.hide_root).setSaveFromParentEnabled(false);
         installInsets();
         work = new HideWork(getApplicationContext());
-        new CoverStep(this, work);
+        cover = new CoverStep(this, work);
         secret = new SecretStep(this, work);
         gesture = new GestureStep(this, secret);
         result = new ResultStep(this, work);
@@ -153,12 +156,15 @@ public final class HideActivity extends AppCompatActivity {
     @Override protected void onResume() {
         super.onResume();
         resumed = true;
+        if (cover != null) cover.resume();
         if (com.example.kineticvault.data.VaultPreferences.current().protection
                 || com.example.kineticvault.data.VaultPreferences.current().nerd)
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         if (secret != null && step == 1) secret.activate();
     }
+
+    boolean isForeground() { return resumed; }
 
     @Override protected void onPause() {
         resumed = false;
@@ -181,6 +187,7 @@ public final class HideActivity extends AppCompatActivity {
     }
 
     @Override protected void onDestroy() {
+        if (cover != null) cover.close();
         if (secret != null) { secret.deactivate(); secret.close(); }
         if (result != null) result.close();
         if (work != null) work.close();

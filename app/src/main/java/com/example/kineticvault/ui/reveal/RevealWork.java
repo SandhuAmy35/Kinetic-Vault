@@ -38,6 +38,10 @@ final class RevealWork {
 
     RevealWork(Context context) {
         this.context = context.getApplicationContext(); ledger = new RevealLedger(this.context);
+        worker.execute(() -> {
+            try { RevealExport.cleanupOrphans(this.context); }
+            catch (IOException | RuntimeException ignored) { /* Export retries cleanup before writing. */ }
+        });
     }
 
     void protection(java.util.function.Consumer<Boolean> callback) {

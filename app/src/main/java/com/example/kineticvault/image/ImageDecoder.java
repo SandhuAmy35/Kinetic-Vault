@@ -40,13 +40,14 @@ final class ImageDecoder {
             }
             ImageUtils.requireOpaque(decoded);
             return decoded;
-        } catch (IOException | RuntimeException failure) {
+        } catch (IOException | RuntimeException | OutOfMemoryError failure) {
             decoded.recycle();
             throw failure;
         }
     }
 
     private static BitmapFactory.Options bounds(ImageUtils.Source source) throws IOException {
+        PngIntegrity.read(source);
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         try (InputStream input = source.open()) {
@@ -105,7 +106,7 @@ final class ImageDecoder {
             Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
             canvas.drawBitmap(source, null, new Rect(0, 0, width, height), paint);
             return target;
-        } catch (RuntimeException failure) {
+        } catch (RuntimeException | OutOfMemoryError failure) {
             target.recycle();
             throw failure;
         }

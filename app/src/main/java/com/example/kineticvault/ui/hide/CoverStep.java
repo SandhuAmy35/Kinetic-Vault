@@ -20,6 +20,7 @@ final class CoverStep {
     private final ActivityResultLauncher<String[]> gallery;
     private final ActivityResultLauncher<Uri> camera;
     private boolean ready;
+    private Uri pendingCamera;
 
     CoverStep(HideActivity host, HideWork work) {
         this.host = host; this.work = work;
@@ -48,10 +49,8 @@ final class CoverStep {
         setBusy(true);
         work.run(work.store::prepareCapture, new HideWork.Callback<Uri>() {
             public void success(Uri uri) {
-                try { camera.launch(uri); }
-                catch (RuntimeException error) {
-                    deleteCapture(); setBusy(false); host.message(R.string.hide_camera_error);
-                }
+                pendingCamera = uri;
+                if (host.isForeground()) resume();
             }
             public void failure(int message) { setBusy(false); host.message(message); }
         });
@@ -88,6 +87,17 @@ final class CoverStep {
         host.findViewById(R.id.hide_cover_next).setEnabled(!busy && ready);
         host.findViewById(R.id.hide_cover_loading).setVisibility(busy ? View.VISIBLE : View.GONE);
     }
+
+    void resume() {
+        if (pendingCamera == null) return;
+        Uri uri = pendingCamera; pendingCamera = null;
+        try { camera.launch(uri); }
+        catch (RuntimeException error) {
+            deleteCapture(); setBusy(false); host.message(R.string.hide_camera_error);
+        }
+    }
+
+    void close() { pendingCamera = null; preview.setImageDrawable(null); }
 
     private static final class CameraContract extends ActivityResultContracts.TakePicture {
         @Override public Intent createIntent(Context context, Uri input) {

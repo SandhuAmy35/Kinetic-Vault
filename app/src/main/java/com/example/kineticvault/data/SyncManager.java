@@ -46,7 +46,7 @@ public final class SyncManager {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             if (!Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction())) return;
-            airplane = Settings.Global.getInt(app.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
+            airplane = intent.getBooleanExtra("state", false);
             boolean enabled = airplane;
             publish(new Status(true, enabled, status.pending, null));
             worker.execute(() -> {
@@ -65,13 +65,15 @@ public final class SyncManager {
     public void removeListener(Listener listener) { listeners.remove(listener); }
     public void start() {
         active = true;
-        airplane = Settings.Global.getInt(app.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
         if (!registered) {
             ContextCompat.registerReceiver(app, receiver, new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED),
                     ContextCompat.RECEIVER_EXPORTED);
             registered = true;
         }
-        request();
+        worker.execute(() -> {
+            airplane = Settings.Global.getInt(app.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
+            main.post(this::request);
+        });
     }
     public void stop() {
         active = false; main.removeCallbacks(poll);

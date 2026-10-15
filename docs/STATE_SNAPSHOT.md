@@ -1,5 +1,5 @@
 ﻿# STATE SNAPSHOT
-Implemented through 4D; STOPPED after INVENTIONS, await explicit START. Core/version1 wire format frozen; docs/IMPLEMENTATION.md format authority. Java/XML only; no dependencies; workers for crypto/pixels/disk/network/DB; original bytes for Reveal/Scan; PNG exports; no CAMERA permission.
+Implemented through 5A AUDIT; STOPPED after audit fixes, await explicit START. Core/version1 wire format frozen; docs/IMPLEMENTATION.md format authority. Java/XML only; no dependencies; workers for crypto/pixels/disk/network/DB; original bytes for Reveal/Scan; PNG exports; no CAMERA permission.
 Paths: Java app/src/main/java/com/example/kineticvault/; resources app/src/main/res/. Other docs BUILD_HEALTH.md/PHONE_CHECKLIST.md contain historical Phase1B information.
 Foundation: VaultApplication; diagnostics/{HarnessReport,HarnessRunner,TestHarnessActivity}; image/{ImageMemory,ImageDecoder,ImageStats,ImageFiles,ImageUtils,CoverGenerator}; design tokens/glow cards/vector icons/animations; private FileProvider cache/shared,capture,reveal and files/vaults.
 ImageUtils static Source source(File), source(ContentResolver,Uri); Bitmap decodeCover(Source,boolean), decodeExact(Source,boolean), flattenOpaque(Bitmap), thumbnail(Bitmap,int), fromPixels(int[],int,int); int[] pixels(Bitmap); savePng(Bitmap,File), checkMemory(int,int,boolean), requireWorker(); String sha256(File); ImageStats statistics(int[],int[]); double psnr(int[],int[]). CoverGenerator static generate(int,int,long); HarnessRunner static run(Context,Listener).
@@ -35,3 +35,10 @@ UiPolish static install(Activity), enter(View), feedback(View), notice(View), fa
 4D: ui/hide/GestureReplay.java opt-in protected enrollment replay; transient clone wipes on finish/dismiss/reset/pause; reduced-motion aware; hide_step_gesture replay button.
 4D: ui/hide/ProofSheet.java worker PNG with LSB-stripped previews/coarse16×16 density/source stats; ResultStep export action warns cover disclosure and sends FileProvider PNG; HideStore owns cached sheet.
 4D docs: INVENTIONS.md; strings.xml/vault_strings.xml; no new public APIs, dependencies or core/wire changes; stopped after INVENTIONS.
+
+Docs: README.md adds full user manual for implemented features through 4D, visual effects, settings, exports, scenarios, recovery and optional Cloud Ledger; no public API changes.
+
+Docs: design.md records source-backed native light/dark design tokens, components, assets, microcopy and offline explainer CSS; no public API changes.
+5A: docs/AUDIT.md records lifecycle, picker, bitmap ownership, Scanner capture, background settings access, export and accessibility fixes.
+5A new: image/PngIntegrity.java (package-private streaming PNG framing/CRC guard); no new public method signatures or core/wire changes.
+5A: Reveal restores only its source URI; first Reveal worker after process death removes orphaned decrypted exports; Hide child controls restart with the discarded session.

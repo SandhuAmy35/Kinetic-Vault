@@ -29,14 +29,19 @@ public final class ScannerActivity extends InfoActivity {
     private TextView status;
     private Bitmap plane;
     private Uri selected, camera;
-    private int generation;
-    private boolean destroyed;
+    private volatile int generation;
+    private volatile boolean destroyed;
+    private boolean capturing, launchPending, foreground;
     private final ActivityResultLauncher<String[]> open = registerForActivityResult(
             new ActivityResultContracts.OpenDocument(), uri -> { if (uri != null) scan(uri); });
     private final ActivityResultLauncher<Uri> take = registerForActivityResult(
             new ActivityResultContracts.TakePicture(), ok -> {
+                capturing = false; cameraControls(true);
                 if (ok && camera != null) scan(camera);
-                else status.setText(R.string.scan_camera_cancelled);
+                else {
+                    discardCamera();
+                    status.setText(R.string.scan_camera_cancelled);
+                }
             });
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state); showPage(R.layout.activity_scanner);
@@ -48,7 +53,11 @@ public final class ScannerActivity extends InfoActivity {
         findViewById(R.id.scan_camera).setOnClickListener(v -> capture());
         findViewById(R.id.scan_reveal).setOnClickListener(v -> reveal());
         if (state != null && state.getString("camera") != null) camera = Uri.parse(state.getString("camera"));
-        if (state != null && state.getString("selected") != null) scan(Uri.parse(state.getString("selected")));
+        capturing = state != null && state.getBoolean("capturing") && camera != null;
+        launchPending = capturing && state.getBoolean("launchPending");
+        cameraControls(!capturing);
+        if (capturing) status.setText(R.string.scan_camera_preparing);
+        else if (state != null && state.getString("selected") != null) scan(Uri.parse(state.getString("selected")));
         else receive(getIntent());
     }
     @Override protected void onNewIntent(Intent intent) {
@@ -62,9 +71,14 @@ public final class ScannerActivity extends InfoActivity {
             if (uri == null && intent.getClipData() != null && intent.getClipData().getItemCount() > 0)
                 uri = intent.getClipData().getItemAt(0).getUri();
         }
-        if (uri != null) scan(uri);
+        if (uri != null || Intent.ACTION_VIEW.equals(intent.getAction())
+                || Intent.ACTION_SEND.equals(intent.getAction())) scan(uri);
     }
     private void capture() {
+        if (capturing) return;
+        capturing = true; cameraControls(false);
+        generation++; selected = null; clearPlane(); discardCamera();
+        findViewById(R.id.scan_reveal).setVisibility(View.GONE);
         status.setText(R.string.scan_camera_preparing);
         worker.execute(() -> {
             try {
@@ -74,27 +88,38 @@ public final class ScannerActivity extends InfoActivity {
                 Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".files", file);
                 main.post(() -> launchCamera(uri));
             } catch (IOException | RuntimeException error) {
-                main.post(() -> { if (!destroyed) showStatus(R.string.scan_error, true); });
+                main.post(() -> { if (!destroyed) {
+                    capturing = false; cameraControls(true); showStatus(R.string.scan_error, true);
+                } });
             }
         });
     }
     private void launchCamera(Uri uri) {
-        if (destroyed) return;
-        camera = uri;
+        if (destroyed) { deleteCapture(uri); return; }
+        camera = uri; launchPending = true;
+        if (!foreground) return;
+        launchPending = false;
         try { take.launch(uri); }
-        catch (RuntimeException error) { showStatus(R.string.scan_camera_error, true); }
+        catch (RuntimeException error) {
+            capturing = false; cameraControls(true); discardCamera();
+            showStatus(R.string.scan_camera_error, true);
+        }
     }
     private void scan(Uri uri) {
-        if (!"content".equals(uri.getScheme())) { showStatus(R.string.scan_error, true); return; }
-        selected = uri; int ticket = ++generation;
-        clearPlane(); status.setText(R.string.scan_working);
+        int ticket = ++generation;
+        selected = null; clearPlane();
         findViewById(R.id.scan_reveal).setVisibility(View.GONE);
+        if (uri == null || !"content".equals(uri.getScheme())) { showStatus(R.string.scan_error, true); return; }
+        if (!uri.equals(camera) && !capturing) discardCamera();
+        selected = uri; status.setText(R.string.scan_working);
         worker.execute(() -> decode(uri, ticket));
     }
     private void decode(Uri uri, int ticket) {
         Bitmap image = null, preview = null; int[] pixels = null;
         try {
+            if (destroyed || ticket != generation) return;
             image = ImageUtils.decodeExact(ImageUtils.source(getContentResolver(), uri), true);
+            if (destroyed || ticket != generation) return;
             pixels = ImageUtils.pixels(image);
             boolean found;
             try { StegoCore.readHeader(pixels); found = true; }
@@ -131,12 +156,40 @@ public final class ScannerActivity extends InfoActivity {
         xray.setPlane(null); xray.setVisibility(View.GONE);
         if (plane != null) { plane.recycle(); plane = null; }
     }
+    private void cameraControls(boolean enabled) {
+        findViewById(R.id.scan_choose).setEnabled(enabled);
+        findViewById(R.id.scan_camera).setEnabled(enabled);
+    }
+    private void discardCamera() {
+        Uri obsolete = camera; camera = null;
+        if (obsolete != null) deleteCapture(obsolete);
+    }
+    private void deleteCapture(Uri uri) {
+        Runnable remove = () -> {
+            try { getContentResolver().delete(uri, null, null); }
+            catch (RuntimeException ignored) { /* A camera provider may already have removed it. */ }
+        };
+        if (!worker.isShutdown()) worker.execute(remove);
+        else {
+            ExecutorService cleanup = Executors.newSingleThreadExecutor();
+            cleanup.execute(remove); cleanup.shutdown();
+        }
+    }
+    @Override protected void onResume() {
+        super.onResume(); foreground = true;
+        if (launchPending && camera != null) launchCamera(camera);
+    }
+    @Override protected void onPause() { foreground = false; super.onPause(); }
     @Override protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
         if (camera != null) state.putString("camera", camera.toString());
         if (selected != null) state.putString("selected", selected.toString());
+        state.putBoolean("capturing", capturing);
+        state.putBoolean("launchPending", launchPending);
     }
     @Override protected void onDestroy() {
-        destroyed = true; generation++; clearPlane(); worker.shutdownNow(); super.onDestroy();
+        destroyed = true; generation++; clearPlane();
+        if (isFinishing()) discardCamera();
+        worker.shutdown(); super.onDestroy();
     }
 }

@@ -16,6 +16,7 @@ import java.util.UUID;
 
 /** Temporary decrypted export: the name stays in memory and never enters the ledger. */
 final class RevealExport {
+    private static boolean cleanedPreviousProcess;
     final File file;
     final Uri uri;
     final String name, mime;
@@ -31,6 +32,7 @@ final class RevealExport {
 
     static RevealExport create(Context context, byte[] bytes, String name, VaultEntry vault) throws IOException {
         VaultRepository.requireWorker();
+        cleanupOrphans(context);
         File directory = new File(context.getCacheDir(), "reveal");
         if (!directory.isDirectory() && !directory.mkdirs()) throw new IOException("Export storage unavailable");
         File file = new File(directory, UUID.randomUUID().toString());
@@ -40,6 +42,21 @@ final class RevealExport {
             Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".files", file, name);
             RevealExport result = new RevealExport(file, uri, name, vault); complete = true; return result;
         } finally { if (!complete) file.delete(); }
+    }
+
+    static synchronized void cleanupOrphans(Context context) throws IOException {
+        VaultRepository.requireWorker();
+        if (cleanedPreviousProcess) return;
+        File directory = new File(context.getCacheDir(), "reveal");
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            if (files == null) throw new IOException("Export cleanup unavailable");
+            for (File file : files) {
+                if (file.isFile() && !file.delete()) throw new IOException("Export cleanup unavailable");
+            }
+        }
+        // Every exporter calls this before creating a file, so live exports are preserved.
+        cleanedPreviousProcess = true;
     }
 
     void save(Context context, Uri destination) throws IOException {

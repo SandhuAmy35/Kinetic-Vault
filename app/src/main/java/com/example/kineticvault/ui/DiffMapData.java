@@ -37,9 +37,16 @@ public final class DiffMapData implements AutoCloseable {
             }
         }
         Bitmap diff = ImageUtils.fromPixels(map, w, h);
-        try { return new DiffMapData(before, after, width, height, diff,
-                buildXRay(after, width, height), ImageUtils.statistics(before, after)); }
-        catch (IOException | RuntimeException | OutOfMemoryError error) { diff.recycle(); throw error; }
+        Bitmap xray = null;
+        try {
+            xray = buildXRay(after, width, height);
+            return new DiffMapData(before, after, width, height, diff, xray,
+                    ImageUtils.statistics(before, after));
+        } catch (IOException | RuntimeException | OutOfMemoryError error) {
+            diff.recycle();
+            if (xray != null) xray.recycle();
+            throw error;
+        }
     }
 
     /** No original image is required; one LSB per channel is amplified to 0 or 255. */

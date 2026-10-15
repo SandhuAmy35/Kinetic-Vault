@@ -35,6 +35,7 @@ final class HideStore implements AutoCloseable {
 
     private final Context context;
     private Bitmap cover;
+    private Bitmap coverPreview;
     private PayloadCodec.Payload prepared;
     private boolean compress, ghost;
     private File capture;
@@ -58,6 +59,7 @@ final class HideStore implements AutoCloseable {
         try {
             Bitmap thumbnail = ImageUtils.thumbnail(bitmap, 512);
             cover = bitmap;
+            coverPreview = thumbnail;
             return new CoverInfo(thumbnail, bitmap.getWidth(), bitmap.getHeight());
         } catch (IOException | RuntimeException | OutOfMemoryError error) {
             bitmap.recycle();
@@ -133,7 +135,9 @@ final class HideStore implements AutoCloseable {
     private void clearCover() {
         clearPrepared();
         if (cover != null) cover.recycle();
+        if (coverPreview != null) coverPreview.recycle();
         cover = null;
+        coverPreview = null;
     }
 
     Uri proofUri() throws IOException {

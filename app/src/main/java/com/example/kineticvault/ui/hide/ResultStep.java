@@ -63,15 +63,15 @@ final class ResultStep {
         if (sheet != null) sheet.dismiss();
         int[] labels = Build.VERSION.SDK_INT >= 29
                 ? new int[]{R.string.export_gallery, R.string.export_document, R.string.hide_share_file, R.string.invention_proof_share}
-                : new int[]{R.string.export_document, R.string.hide_share_file};
+                : new int[]{R.string.export_document, R.string.hide_share_file, R.string.invention_proof_share};
         Runnable[] actions = Build.VERSION.SDK_INT >= 29
                 ? new Runnable[]{this::savePng, this::saveDocument, this::warnShare, this::warnProof}
-                : new Runnable[]{this::saveDocument, this::warnShare};
+                : new Runnable[]{this::saveDocument, this::warnShare, this::warnProof};
         sheet = com.example.kineticvault.ui.ExportSheet.show(host, R.string.export_png_note, labels, actions);
     }
     private void saveDocument() {
         busy(true);
-        try { document.launch("KineticVault.png"); }
+        try { document.launch(host.getString(R.string.audit_png_name)); }
         catch (RuntimeException error) { busy(false); host.message(R.string.hide_picker_error); }
     }
     private void savePng() {
@@ -79,7 +79,7 @@ final class ResultStep {
         if (Build.VERSION.SDK_INT >= 29) {
             save(() -> HideExporter.saveGallery(host, work.store.output));
         } else {
-            try { document.launch("KineticVault.png"); }
+            try { document.launch(host.getString(R.string.audit_png_name)); }
             catch (RuntimeException error) { busy(false); host.message(R.string.hide_picker_error); }
         }
     }

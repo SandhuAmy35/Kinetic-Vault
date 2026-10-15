@@ -264,4 +264,7 @@ Stopped at: %2$s</string>
     <string name="invention_proof_footer">Display only · Preview LSBs stripped · 16 × 16 binned density map</string>
     <string name="invention_proof_footer_two">Measured source statistics · No decrypted content or credentials · Not an unlockable vault</string>
     <string name="invention_proof_warning">This sheet reveals the cover image, coarse change locations and image statistics. Share only if that cover is safe to disclose. It is a display image, not a vault or cryptographic proof. Send the PNG as Document/File to keep the sheet clear.</string>
+    <string name="audit_export_cancelled">Export cancelled. Choose Export options to try again; unlock first if the vault has locked.</string>
+    <string name="audit_back">Back</string>
+    <string name="audit_png_name" translatable="false">KineticVault.png</string>
 </resources>
